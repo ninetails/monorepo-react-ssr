@@ -1,0 +1,36 @@
+{
+  "name": "monorepo-react-ssr",
+  "version": "0.0.0",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ninetails/monorepo-react-ssr.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ninetails/monorepo-react-ssr/issues"
+  },
+  "homepage": "https://github.com/ninetails/monorepo-react-ssr#readme",
+  "devDependencies": {
+    "@commitlint/cli": "^7.1.2",
+    "@commitlint/config-conventional": "^7.1.2",
+    "husky": "^1.0.0",
+    "lerna": "^3.4.0"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
+      "pre-commit": "npm run lint",
+      "pre-push": "npm run test"
+    }
+  },
+  "scripts": {
+    "bootstrap": "lerna bootstrap",
+    "clean": "lerna run clean",
+    "purge": "lerna clean && rm -rf node_modules",
+    "lint": "lerna run lint",
+    "reset": "$npm_execpath run purge && $npm_execpath install && $npm_execpath run bootstrap",
+    "test": "lerna run test"
+  }
+}
