@@ -28,7 +28,7 @@
   "scripts": {
     "bootstrap": "lerna bootstrap",
     "clean": "lerna run clean",
-    "purge": "lerna clean && rm -rf node_modules",
+    "purge": "lerna clean --yes && rm -rf node_modules",
     "lint": "lerna run lint",
     "reset": "$npm_execpath run purge && $npm_execpath install && $npm_execpath run bootstrap",
     "test": "lerna run test"
