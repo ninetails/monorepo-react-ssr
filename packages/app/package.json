@@ -1,0 +1,13 @@
+{
+  "name": "app",
+  "version": "0.0.0",
+  "private": true,
+  "devDependencies": {
+    "concurrently": "^4.0.1",
+    "config-eslint": "^0.0.0"
+  },
+  "scripts": {
+    "lint": "concurrently --kill-others-on-fail npm:lint:eslint",
+    "lint:eslint": "eslint src"
+  }
+}
