@@ -1,1 +1,0 @@
-{"version":3,"sources":["../src/App.js"],"names":[],"mappings":";;;;;;;AAAA;;;;eAEe;AAAA,SAAM,gDAAN;AAAA,C","sourcesContent":["import React from 'react'\n\nexport default () => <div>App</div>\n"],"file":"App.js"}
