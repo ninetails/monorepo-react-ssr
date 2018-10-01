@@ -1,6 +1,22 @@
 const express = require('express')
-const path = require('path')
 const app = express()
+
+const stats = {
+  colors: true,
+  hash: false,
+  version: false,
+  timings: false,
+  assets: false,
+  chunks: false,
+  modules: false,
+  reasons: false,
+  children: false,
+  source: false,
+  errors: false,
+  errorDetails: false,
+  warnings: false,
+  publicPath: false
+}
 
 if (process.env.NODE_ENV !== 'production') {
   const webpack = require('webpack')
@@ -9,17 +25,11 @@ if (process.env.NODE_ENV !== 'production') {
   const webpackHotServerMiddleware = require('webpack-hot-server-middleware')
   const config = require('./webpack.config.js')
   const compiler = webpack(config)
-  app.use(webpackDevMiddleware(compiler, { serverSideRender: true }))
+  app.use(webpackDevMiddleware(compiler, { serverSideRender: true, noInfo: true, stats }))
   app.use(webpackHotMiddleware(compiler.compilers.find(compiler => compiler.name === 'client')))
   app.use(webpackHotServerMiddleware(compiler))
 } else {
-  const CLIENT_ASSETS_DIR = path.join(__dirname, './build/client')
-  const CLIENT_STATS_PATH = path.join(CLIENT_ASSETS_DIR, 'stats.json')
-  const SERVER_RENDERER_PATH = path.join(__dirname, './build/server.js')
-  const serverRenderer = require(SERVER_RENDERER_PATH)
-  const stats = require(CLIENT_STATS_PATH)
-  app.use(express.static(CLIENT_ASSETS_DIR))
-  app.use(serverRenderer(stats))
+  throw new Error('@todo')
 }
 
-app.listen(6060)
+app.listen(6060, () => console.log('Server started: http://localhost:6060/'))

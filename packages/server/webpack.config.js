@@ -1,7 +1,10 @@
-const { dirname } = require('path')
+const { dirname, join } = require('path')
+const webpack = require('webpack')
 const babelConfig = require('config-babel')
 const { presets, plugins } = babelConfig
-const [ presetEnv, ...restPresets ] = presets // eslint-disable-line no-unused-vars
+const [ _, ...restPresets ] = presets // eslint-disable-line no-unused-vars
+
+const dist = join(__dirname, 'dist')
 
 const includePaths = [
   dirname(require.resolve('app/package.json'))
@@ -11,8 +14,19 @@ module.exports = [
   {
     name: 'client',
     target: 'web',
-    entry: 'app/client.js',
+    entry: [
+      'webpack-hot-middleware/client?name=client&reload=true',
+      'app/client.js'
+    ],
+    output: {
+      path: dist,
+      filename: 'client.js'
+    },
     mode: process.env.NODE_ENV || 'development',
+    devtool: process.env.NODE_ENV === 'development' ? 'cheap-eval-source-map' : 'source-map',
+    node: {
+      process: false
+    },
     module: {
       rules: [
         {
@@ -31,13 +45,28 @@ module.exports = [
           }
         }
       ]
-    }
+    },
+    plugins: [
+      new webpack.HotModuleReplacementPlugin()
+    ]
   },
   {
     name: 'server',
     target: 'node',
-    entry: 'app/server.js',
+    entry: [
+      'webpack-hot-middleware/client?name=server',
+      'app/server.js'
+    ],
+    output: {
+      path: dist,
+      filename: 'server.js',
+      libraryTarget: 'commonjs2'
+    },
     mode: process.env.NODE_ENV || 'development',
+    devtool: process.env.NODE_ENV === 'development' ? 'cheap-eval-source-map' : 'source-map',
+    node: {
+      process: false
+    },
     module: {
       rules: [
         {
@@ -56,6 +85,9 @@ module.exports = [
           }
         }
       ]
-    }
+    },
+    plugins: [
+      new webpack.HotModuleReplacementPlugin()
+    ]
   }
 ]
