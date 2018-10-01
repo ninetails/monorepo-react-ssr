@@ -1,0 +1,23 @@
+{
+  "name": "server",
+  "version": "0.0.0",
+  "private": true,
+  "devDependencies": {
+    "babel-loader": "^8.0.4",
+    "config-babel": "^0.0.0",
+    "eslint-config-monorepo": "^0.0.0",
+    "webpack": "^4.20.2",
+    "webpack-dev-middleware": "^3.4.0",
+    "webpack-hot-middleware": "^2.24.2",
+    "webpack-hot-server-middleware": "^0.5.0"
+  },
+  "dependencies": {
+    "app": "^0.0.0",
+    "express": "^4.16.3",
+    "react": "^16.5.2",
+    "react-dom": "^16.5.2"
+  },
+  "scripts": {
+    "eslint": "eslint src"
+  }
+}
