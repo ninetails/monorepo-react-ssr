@@ -14,8 +14,9 @@
   },
   "scripts": {
     "babel": "babel --ignore **/*.test.js -s --out-dir dist src",
-    "build": "npm run babel",
+    "build": "$npm_execpath run babel",
     "lint": "concurrently --kill-others-on-fail npm:lint:eslint",
-    "lint:eslint": "eslint src"
+    "lint:eslint": "eslint src",
+    "postinstall": "$npm_execpath run build"
   }
 }
