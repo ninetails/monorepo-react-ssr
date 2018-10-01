@@ -12,10 +12,16 @@
     "url": "https://github.com/ninetails/monorepo-react-ssr/issues"
   },
   "homepage": "https://github.com/ninetails/monorepo-react-ssr#readme",
+  "workspaces": {
+    "packages": [
+      "packages/*",
+      "packages/*/dist"
+    ]
+  },
   "devDependencies": {
     "@commitlint/cli": "^7.1.2",
     "@commitlint/config-conventional": "^7.1.2",
-    "husky": "^1.0.0",
+    "husky": "^1.0.1",
     "lerna": "^3.4.0"
   },
   "husky": {
@@ -30,7 +36,6 @@
     "clean": "lerna run clean",
     "purge": "lerna clean --yes && rm -rf node_modules",
     "lint": "lerna run lint",
-    "reset": "$npm_execpath run purge && $npm_execpath install && $npm_execpath run bootstrap",
-    "test": "lerna run test"
+    "reset": "$npm_execpath run purge && $npm_execpath install && $npm_execpath run bootstrap"
   }
 }

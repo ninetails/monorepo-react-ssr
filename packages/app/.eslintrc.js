@@ -1,1 +1,3 @@
-module.exports = require('config-eslint/.eslintrc.js')
+module.exports = {
+  extends: 'eslint-config-monorepo'
+}

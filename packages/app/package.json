@@ -1,12 +1,20 @@
 {
-  "name": "app",
+  "name": "app-dev",
   "version": "0.0.0",
   "private": true,
   "devDependencies": {
     "concurrently": "^4.0.1",
-    "config-eslint": "^0.0.0"
+    "config-babel": "^0.0.0",
+    "eslint": "^5.6.1",
+    "eslint-config-monorepo": "^0.0.0"
+  },
+  "dependencies": {
+    "react": "^16.5.2",
+    "react-dom": "^16.5.2"
   },
   "scripts": {
+    "babel": "babel --ignore **/*.test.js -s --out-dir dist src",
+    "build": "npm run babel",
     "lint": "concurrently --kill-others-on-fail npm:lint:eslint",
     "lint:eslint": "eslint src"
   }
