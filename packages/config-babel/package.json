@@ -6,6 +6,9 @@
   "bin": {
     "babel": "./babel.js"
   },
+  "devDependencies": {
+    "@ninetails-monorepo-react-ssr/eslint-config-monorepo-ssr": "^0.0.0"
+  },
   "dependencies": {
     "@babel/cli": "^7.1.5",
     "@babel/core": "^7.1.6",
@@ -27,5 +30,8 @@
     "@babel/plugin-syntax-import-meta": "^7.0.0",
     "@babel/preset-env": "^7.1.6",
     "@babel/preset-react": "^7.0.0"
+  },
+  "scripts": {
+    "lint": "eslint ."
   }
 }
