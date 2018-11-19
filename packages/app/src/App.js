@@ -1,3 +1,13 @@
 import React from 'react'
+import Helmet from 'react-helmet'
 
-export default () => <div>App</div>
+export default () => (
+  <>
+    <Helmet>
+      <title>React App</title>
+    </Helmet>
+    <div>
+      App
+    </div>
+  </>
+)

@@ -1,18 +1,16 @@
-const { dirname, join } = require('path')
+const { join } = require('path')
 const webpack = require('webpack')
 const { StatsWriterPlugin } = require('webpack-stats-plugin')
-const babelConfig = require('@ninetails-monorepo-react-ssr/babel-preset-monorepo-react-ssr')
-const { presets, plugins } = babelConfig()
-const [ _, ...restPresets ] = presets // eslint-disable-line no-unused-vars
+const definePluginFactory = require('./helpers/definePluginFactory')
+
+require('./loadenv')
 
 const dist = join(__dirname, 'dist')
 
-const includePaths = [
-  dirname(require.resolve('@ninetails-monorepo-react-ssr/app/package.json'))
-]
-
 const mode = process.env.NODE_ENV || 'development'
 const devtool = process.env.NODE_ENV === 'development' ? 'cheap-eval-source-map' : 'source-map'
+
+const customEnvVars = []
 
 module.exports = [
   {
@@ -31,30 +29,12 @@ module.exports = [
     node: {
       process: false
     },
-    module: {
-      rules: [
-        {
-          test: /\.js$/,
-          include: includePaths,
-          exclude: /node_modules/,
-          use: {
-            loader: 'babel-loader',
-            options: {
-              presets: [
-                ['@babel/preset-env', { useBuiltIns: 'entry', targets: '> 10%' }],
-                ...restPresets
-              ],
-              plugins
-            }
-          }
-        }
-      ]
-    },
     plugins: [
       new webpack.HotModuleReplacementPlugin(),
       new StatsWriterPlugin({
         filename: 'stats.json'
-      })
+      }),
+      definePluginFactory(customEnvVars)
     ]
   },
   {
@@ -74,27 +54,9 @@ module.exports = [
     node: {
       process: false
     },
-    module: {
-      rules: [
-        {
-          test: /\.js$/,
-          include: includePaths,
-          exclude: /node_modules/,
-          use: {
-            loader: 'babel-loader',
-            options: {
-              presets: [
-                ['@babel/preset-env', { useBuiltIns: 'entry', targets: { node: 'current' } }],
-                ...restPresets
-              ],
-              plugins
-            }
-          }
-        }
-      ]
-    },
     plugins: [
-      new webpack.HotModuleReplacementPlugin()
+      new webpack.HotModuleReplacementPlugin(),
+      definePluginFactory(customEnvVars)
     ]
   }
 ]
