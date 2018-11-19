@@ -1,23 +1,21 @@
 {
-  "name": "server",
+  "name": "@ninetails-monorepo-react-ssr/server-dev",
   "version": "0.0.0",
   "private": true,
   "devDependencies": {
+    "@babel/core": "^7.1.6",
+    "@ninetails-monorepo-react-ssr/babel-preset-monorepo-react-ssr": "^0.0.0",
+    "@ninetails-monorepo-react-ssr/eslint-config-monorepo-ssr": "^0.0.0",
     "babel-loader": "^8.0.4",
-    "config-babel": "^0.0.0",
-    "eslint-config-monorepo": "^0.0.0",
-    "webpack": "^4.20.2",
     "webpack-dev-middleware": "^3.4.0",
-    "webpack-hot-middleware": "^2.24.2",
-    "webpack-hot-server-middleware": "^0.5.0"
+    "webpack-hot-middleware": "^2.24.3",
+    "webpack-hot-server-middleware": "^0.5.0",
+    "webpack": "^4.26.0"
   },
   "dependencies": {
-    "app": "^0.0.0",
-    "express": "^4.16.3",
-    "react": "^16.5.2",
-    "react-dom": "^16.5.2"
-  },
-  "scripts": {
-    "eslint": "eslint src"
+    "@ninetails-monorepo-react-ssr/app": "^0.0.0",
+    "express": "^4.16.4",
+    "react-dom": "^16.7.0-alpha.2",
+    "react": "^16.7.0-alpha.2"
   }
 }

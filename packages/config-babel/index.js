@@ -1,4 +1,4 @@
-module.exports = {
+module.exports = () => ({
   "presets": [
     ["@babel/preset-env", { "useBuiltIns": "entry" }],
     "@babel/preset-react"
@@ -28,4 +28,4 @@ module.exports = {
     ["@babel/plugin-proposal-class-properties", { "loose": false }],
     "@babel/plugin-proposal-json-strings"
   ]
-}
+})

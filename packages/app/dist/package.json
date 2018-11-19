@@ -1,12 +1,8 @@
 {
-  "name": "app",
+  "name": "@ninetails-monorepo-react-ssr/app",
   "version": "0.0.0",
-  "files": [
-    "client.js",
-    "server.js"
-  ],
   "peerDependencies": {
-    "react": "^16.5.2",
-    "react-dom": "^16.5.2"
+    "react-dom": "^16.7.0-alpha.2",
+    "react": "^16.7.0-alpha.2"
   }
 }

@@ -1,12 +1,16 @@
 {
-  "name": "config-babel",
+  "name": "@ninetails-monorepo-react-ssr/babel-preset-monorepo-react-ssr",
   "version": "0.0.0",
   "private": true,
-  "devDependencies": {
-    "@babel/cli": "^7.1.2",
-    "@babel/core": "^7.1.2",
+  "main": "index.js",
+  "bin": {
+    "babel": "./babel.js"
+  },
+  "dependencies": {
+    "@babel/cli": "^7.1.5",
+    "@babel/core": "^7.1.6",
     "@babel/plugin-proposal-class-properties": "^7.1.0",
-    "@babel/plugin-proposal-decorators": "^7.1.2",
+    "@babel/plugin-proposal-decorators": "^7.1.6",
     "@babel/plugin-proposal-do-expressions": "^7.0.0",
     "@babel/plugin-proposal-export-default-from": "^7.0.0",
     "@babel/plugin-proposal-export-namespace-from": "^7.0.0",
@@ -21,14 +25,7 @@
     "@babel/plugin-proposal-throw-expressions": "^7.0.0",
     "@babel/plugin-syntax-dynamic-import": "^7.0.0",
     "@babel/plugin-syntax-import-meta": "^7.0.0",
-    "@babel/preset-env": "^7.1.0",
+    "@babel/preset-env": "^7.1.6",
     "@babel/preset-react": "^7.0.0"
-  },
-  "main": "index.js",
-  "files": [
-    "index.js"
-  ],
-  "bin": {
-    "babel": "./node_modules/.bin/babel"
   }
 }

@@ -1,13 +1,13 @@
 const { dirname, join } = require('path')
 const webpack = require('webpack')
-const babelConfig = require('config-babel')
-const { presets, plugins } = babelConfig
+const babelConfig = require('@ninetails-monorepo-react-ssr/babel-preset-monorepo-react-ssr')
+const { presets, plugins } = babelConfig()
 const [ _, ...restPresets ] = presets // eslint-disable-line no-unused-vars
 
 const dist = join(__dirname, 'dist')
 
 const includePaths = [
-  dirname(require.resolve('app/package.json'))
+  dirname(require.resolve('@ninetails-monorepo-react-ssr/app/package.json'))
 ]
 
 module.exports = [
@@ -16,7 +16,7 @@ module.exports = [
     target: 'web',
     entry: [
       'webpack-hot-middleware/client?name=client&reload=true',
-      'app/client.js'
+      '@ninetails-monorepo-react-ssr/app/client.js'
     ],
     output: {
       path: dist,
@@ -55,7 +55,7 @@ module.exports = [
     target: 'node',
     entry: [
       'webpack-hot-middleware/client?name=server',
-      'app/server.js'
+      '@ninetails-monorepo-react-ssr/app/server.js'
     ],
     output: {
       path: dist,
