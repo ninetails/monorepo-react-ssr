@@ -1,0 +1,32 @@
+{
+  "name": "@ninetails-monorepo-react-ssr/server-express",
+  "version": "0.0.0",
+  "private": true,
+  "devDependencies": {
+    "@babel/core": "^7.1.6",
+    "@ninetails-monorepo-react-ssr/babel-preset-monorepo-react-ssr": "^0.0.0",
+    "@ninetails-monorepo-react-ssr/eslint-config-monorepo-ssr": "^0.0.0",
+    "babel-loader": "^8.0.4",
+    "cross-env": "^5.2.0",
+    "webpack": "^4.26.0",
+    "webpack-cli": "^3.1.2",
+    "webpack-dev-middleware": "^3.4.0",
+    "webpack-hot-middleware": "^2.24.3",
+    "webpack-hot-server-middleware": "^0.5.0",
+    "webpack-stats-plugin": "^0.2.1"
+  },
+  "dependencies": {
+    "@ninetails-monorepo-react-ssr/app": "^0.0.0",
+    "express": "^4.16.4",
+    "react": "^16.7.0-alpha.2",
+    "react-dom": "^16.7.0-alpha.2"
+  },
+  "scripts": {
+    "build:clean": "rm -rf dist/*",
+    "build:create:dist": "mkdir -p dist/client",
+    "build:webpack": "cross-env NODE_ENV=production webpack --mode=production",
+    "build": "$npm_execpath run build:clean && $npm_execpath run build:create:dist && $npm_execpath run build:webpack",
+    "dev": "cross-env NODE_ENV=development node ./index.js",
+    "start": "cross-env NODE_ENV=production node ./index.js"
+  }
+}

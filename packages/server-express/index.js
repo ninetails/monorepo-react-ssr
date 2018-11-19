@@ -1,3 +1,4 @@
+const { join } = require('path')
 const express = require('express')
 const app = express()
 
@@ -29,7 +30,13 @@ if (process.env.NODE_ENV !== 'production') {
   app.use(webpackHotMiddleware(compiler.compilers.find(compiler => compiler.name === 'client')))
   app.use(webpackHotServerMiddleware(compiler))
 } else {
-  throw new Error('@todo')
+  const CLIENT_ASSETS_DIR = join(__dirname, './dist/client')
+  const CLIENT_STATS_PATH = join(CLIENT_ASSETS_DIR, 'stats.json')
+  const SERVER_RENDERER_PATH = join(__dirname, './dist/server.js')
+  const serverRenderer = require(SERVER_RENDERER_PATH).default
+  const stats = require(CLIENT_STATS_PATH)
+  app.use(express.static(CLIENT_ASSETS_DIR))
+  app.use(serverRenderer(stats))
 }
 
 app.listen(6060, () => console.log('Server started: http://localhost:6060/'))
