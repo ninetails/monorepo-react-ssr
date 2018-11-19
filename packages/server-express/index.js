@@ -35,9 +35,9 @@ if (process.env.NODE_ENV !== 'production') {
   const CLIENT_STATS_PATH = join(CLIENT_ASSETS_DIR, 'stats.json')
   const SERVER_RENDERER_PATH = join(__dirname, './dist/server.js')
   const serverRenderer = require(SERVER_RENDERER_PATH).default
-  const stats = require(CLIENT_STATS_PATH)
+  const clientStats = require(CLIENT_STATS_PATH)
   app.use(express.static(CLIENT_ASSETS_DIR))
-  app.use(serverRenderer(stats))
+  app.use(serverRenderer({ clientStats }))
 }
 
 app.listen(6060, () => console.log('Server started: http://localhost:6060/'))

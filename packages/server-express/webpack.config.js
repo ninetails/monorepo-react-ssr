@@ -9,20 +9,26 @@ const dist = join(__dirname, 'dist')
 
 const mode = process.env.NODE_ENV || 'development'
 const devtool = process.env.NODE_ENV === 'development' ? 'cheap-eval-source-map' : 'source-map'
+const clientFilename = process.env.NODE_ENV === 'production' ? '[name].[hash].js' : '[name].js'
 
-const customEnvVars = []
+const customEnvVars = [
+  'ASSET_PATH'
+]
 
 module.exports = [
   {
     name: 'client',
     target: 'web',
-    entry: [
-      'webpack-hot-middleware/client?name=client&reload=true',
-      '@ninetails-monorepo-react-ssr/app/client.js'
-    ],
+    entry: process.env.NODE_ENV === 'production'
+      ? '@ninetails-monorepo-react-ssr/app/client.js'
+      : [
+        'webpack-hot-middleware/client?name=client&reload=true',
+        '@ninetails-monorepo-react-ssr/app/client.js'
+      ],
     output: {
       path: `${dist}/client`,
-      filename: 'index.js'
+      publicPath: process.env.ASSET_PATH || '/',
+      filename: clientFilename
     },
     mode,
     devtool,
@@ -30,7 +36,7 @@ module.exports = [
       process: false
     },
     plugins: [
-      new webpack.HotModuleReplacementPlugin(),
+      process.env.NODE_ENV === 'production' ? () => undefined : new webpack.HotModuleReplacementPlugin(),
       new StatsWriterPlugin({
         filename: 'stats.json'
       }),
@@ -40,10 +46,12 @@ module.exports = [
   {
     name: 'server',
     target: 'node',
-    entry: [
-      'webpack-hot-middleware/client?name=server',
-      '@ninetails-monorepo-react-ssr/app/express.js'
-    ],
+    entry: process.env.NODE_ENV === 'production'
+      ? '@ninetails-monorepo-react-ssr/app/express.js'
+      : [
+        'webpack-hot-middleware/client?name=server',
+        '@ninetails-monorepo-react-ssr/app/express.js'
+      ],
     output: {
       path: dist,
       filename: 'server.js',
@@ -55,7 +63,7 @@ module.exports = [
       process: false
     },
     plugins: [
-      new webpack.HotModuleReplacementPlugin(),
+      process.env.NODE_ENV === 'production' ? () => undefined : new webpack.HotModuleReplacementPlugin(),
       definePluginFactory(customEnvVars)
     ]
   }

@@ -4,6 +4,9 @@ import { Helmet } from 'react-helmet'
 import App from './App'
 
 export default function serverRenderer ({ clientStats, serverStats }) {
+  const { main } = clientStats.assetsByChunkName
+  const mainSrc = typeof main === 'string' ? main : main[0]
+
   return (req, res, next) => {
     const content = renderToString(<App />)
     const helmet = Helmet.renderStatic()
@@ -20,6 +23,7 @@ export default function serverRenderer ({ clientStats, serverStats }) {
         </head>
         <body {...bodyAttrs}>
           <div id={process.env.REACT_APP_ROOT || 'root'} dangerouslySetInnerHTML={{ __html: content }} />
+          <script src={`/${mainSrc}`} />
         </body>
       </html>
     )

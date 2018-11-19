@@ -6,8 +6,8 @@ function filterByPrefixReactApp (obj, prefix = 'REACT_APP_') {
     .reduce((acc, key) => ({ ...acc, [key]: JSON.stringify(obj[key]) }), {})
 }
 
-function filterObj (obj = {}, attrs = []) {
-  return attrs.reduce(
+function filterByProps (obj = {}, props = []) {
+  return props.reduce(
     (acc, name) => ({
       ...acc,
       [name]: obj[name] ? JSON.stringify(obj[name]) : null
@@ -18,6 +18,12 @@ function filterObj (obj = {}, attrs = []) {
 
 module.exports = function definePluginFactory (vars = [], { processEnv = process.env, DefinePlugin = webpack.DefinePlugin } = {}) {
   return new DefinePlugin({
-    'process.env': Object.assign({}, filterByPrefixReactApp(processEnv), filterObj(processEnv, vars))
+    'process.env': Object.assign(
+      {
+        NODE_ENV: JSON.stringify(processEnv.NODE_ENV || 'development')
+      },
+      filterByPrefixReactApp(processEnv),
+      filterByProps(processEnv, vars)
+    )
   })
 }
