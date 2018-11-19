@@ -37,6 +37,7 @@
     "lerna:clean": "lerna run clean 2>/dev/null || :",
     "lint": "lerna run lint",
     "purge": "$npm_execpath run lerna:clean && $npm_execpath run clean && rm -rf node_modules",
-    "reset": "$npm_execpath run purge && $npm_execpath install && $npm_execpath run bootstrap"
+    "reset": "$npm_execpath run purge && $npm_execpath install && $npm_execpath run bootstrap",
+    "test": "lerna run test"
   }
 }
