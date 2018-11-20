@@ -1,5 +1,6 @@
 const { join } = require('path')
 const webpack = require('webpack')
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const { StatsWriterPlugin } = require('webpack-stats-plugin')
 const definePluginFactory = require('./helpers/definePluginFactory')
 
@@ -39,6 +40,20 @@ module.exports = [
     devtool,
     node: {
       process: false
+    },
+    optimization: {
+      minimizer:
+        process.env.NODE_ENV === 'development'
+          ? []
+          : [
+            new UglifyJsPlugin({
+              uglifyOptions: {
+                output: {
+                  comments: false
+                }
+              }
+            })
+          ]
     },
     plugins: [
       process.env.NODE_ENV === 'production'
