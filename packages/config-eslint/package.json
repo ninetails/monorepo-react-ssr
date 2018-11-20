@@ -1,6 +1,16 @@
 {
   "name": "@ninetails-monorepo-react-ssr/eslint-config-monorepo-ssr",
   "version": "0.0.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ninetails/monorepo-react-ssr.git"
+  },
+  "author": "Ninetails - Carlos Kazuo",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ninetails/monorepo-react-ssr/issues"
+  },
+  "homepage": "https://github.com/ninetails/monorepo-react-ssr/tree/master/packages/config-eslint#readme",
   "main": "index.js",
   "bin": {
     "eslint": "./eslint.js"

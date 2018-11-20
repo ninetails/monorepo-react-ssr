@@ -2,6 +2,16 @@
   "name": "@ninetails-monorepo-react-ssr/app-dev",
   "version": "0.0.0",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ninetails/monorepo-react-ssr.git"
+  },
+  "author": "Ninetails - Carlos Kazuo",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ninetails/monorepo-react-ssr/issues"
+  },
+  "homepage": "https://github.com/ninetails/monorepo-react-ssr/tree/master/packages/app#readme",
   "devDependencies": {
     "@babel/core": "^7.1.6",
     "babel-core": "^7.0.0-bridge.0",
