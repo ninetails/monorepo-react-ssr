@@ -1,0 +1,8 @@
+{
+  "presets": ["@ninetails-monorepo-react-ssr/babel-preset-monorepo-react-ssr"],
+  "env": {
+    "test": {
+      "presets": ["@babel/preset-env", "@babel/preset-react"]
+    }
+  }
+}

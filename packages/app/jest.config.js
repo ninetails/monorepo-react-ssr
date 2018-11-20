@@ -1,13 +1,10 @@
 module.exports = {
   browser: true,
-  collectCoverageFrom: [
-    '<rootDir>/src/**/*.{js,jsx}',
-    '!**/__fixtures__/**'
-  ],
+  collectCoverageFrom: ['<rootDir>/src/**/*.js'],
   roots: ['<rootDir>/src'],
-  setupTestFrameworkScriptFile: '<rootDir>jest.setup.js',
+  setupTestFrameworkScriptFile: '<rootDir>/jest.setup.js',
   transform: {
-    '^.+\\.jsx?$': 'babel-jest'
+    '^.+\\.js$': 'babel-jest'
   },
   verbose: true
 }
