@@ -6,7 +6,6 @@
     "@babel/core": "^7.1.6",
     "@ninetails-monorepo-react-ssr/babel-preset-monorepo-react-ssr": "^0.0.0",
     "@ninetails-monorepo-react-ssr/eslint-config-monorepo-ssr": "^0.0.0",
-    "babel-loader": "^8.0.4",
     "cross-env": "^5.2.0",
     "dotenv": "^6.1.0",
     "webpack": "^4.26.0",
