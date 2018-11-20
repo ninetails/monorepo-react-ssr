@@ -28,17 +28,19 @@
   "husky": {
     "hooks": {
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
-      "pre-commit": "npm run lint",
-      "pre-push": "npm run test"
+      "pre-commit": "npm run hook:lint",
+      "pre-push": "npm run hook:test"
     }
   },
   "scripts": {
     "bootstrap": "lerna bootstrap",
     "clean": "lerna clean --yes 2>/dev/null || :",
+    "hook:lint": "$npm_execpath run lint -- --since develop --parallel",
+    "hook:test": "$npm_execpath run test -- --since develop --parallel",
     "lerna:clean": "lerna run clean 2>/dev/null || :",
-    "lint": "lerna run lint --since develop --parallel",
+    "lint": "lerna run lint",
     "purge": "$npm_execpath run lerna:clean && $npm_execpath run clean && rm -rf node_modules",
     "reset": "$npm_execpath run purge && $npm_execpath install && $npm_execpath run bootstrap",
-    "test": "lerna run test --since develop --parallel"
+    "test": "lerna run test"
   }
 }
