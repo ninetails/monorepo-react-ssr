@@ -2,6 +2,9 @@
 
 > Simple monorepo with a server running with React with SSR
 
+[![GitHub license](https://img.shields.io/github/license/ninetails/monorepo-react-ssr.svg)](https://github.com/ninetails/monorepo-react-ssr/blob/master/LICENSE)
+[![Build Status](https://travis-ci.org/ninetails/monorepo-react-ssr.svg?branch=master)](https://travis-ci.org/ninetails/monorepo-react-ssr)
+
 ## Usage
 
 After clone this repo, run
