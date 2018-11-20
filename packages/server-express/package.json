@@ -24,8 +24,9 @@
   "scripts": {
     "build:clean": "rm -rf dist/*",
     "build:create:dist": "mkdir -p dist/client",
+    "build:copy:public": "cp -r public/* dist/client 2>/dev/null || :",
     "build:webpack": "cross-env NODE_ENV=production webpack --mode=production",
-    "build": "$npm_execpath run build:clean && $npm_execpath run build:create:dist && $npm_execpath run build:webpack",
+    "build": "$npm_execpath run build:clean && $npm_execpath run build:create:dist && $npm_execpath run build:copy:public && $npm_execpath run build:webpack",
     "dev": "cross-env NODE_ENV=development node ./index.js",
     "lint": "eslint .",
     "start": "cross-env NODE_ENV=production node ./index.js"
