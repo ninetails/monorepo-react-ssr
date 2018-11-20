@@ -4,8 +4,5 @@
   "peerDependencies": {
     "react": "^16.7.0-alpha.2",
     "react-dom": "^16.7.0-alpha.2"
-  },
-  "dependencies": {
-    "react-helmet": "^5.2.0"
   }
 }

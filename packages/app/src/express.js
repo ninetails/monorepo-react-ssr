@@ -1,6 +1,5 @@
 import React from 'react'
 import { renderToString } from 'react-dom/server'
-import { Helmet } from 'react-helmet'
 import App from './App'
 
 export default function serverRenderer ({ clientStats, serverStats }) {
@@ -9,20 +8,17 @@ export default function serverRenderer ({ clientStats, serverStats }) {
 
   return (req, res, next) => {
     const content = renderToString(<App />)
-    const helmet = Helmet.renderStatic()
-
-    const htmlAttrs = helmet.htmlAttributes.toComponent()
-    const bodyAttrs = helmet.bodyAttributes.toComponent()
 
     const html = renderToString(
-      <html {...htmlAttrs}>
+      <html>
         <head>
-          {helmet.title.toComponent()}
-          {helmet.meta.toComponent()}
-          {helmet.link.toComponent()}
+          <title>React App</title>
         </head>
-        <body {...bodyAttrs}>
-          <div id={process.env.REACT_APP_ROOT || 'root'} dangerouslySetInnerHTML={{ __html: content }} />
+        <body>
+          <div
+            id={process.env.REACT_APP_ROOT || 'root'}
+            dangerouslySetInnerHTML={{ __html: content }}
+          />
           <script src={`/${mainSrc}`} />
         </body>
       </html>
