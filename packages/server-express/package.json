@@ -14,7 +14,7 @@
   "devDependencies": {
     "@babel/core": "^7.1.6",
     "@ninetails-monorepo-react-ssr/babel-preset-monorepo-react-ssr": "^0.0.0",
-    "@ninetails-monorepo-react-ssr/eslint-config-monorepo-ssr": "^0.0.0",
+    "@ninetails-monorepo-react-ssr/eslint-config-monorepo-react-ssr": "^0.0.0",
     "cross-env": "^5.2.0",
     "dotenv": "^6.1.0",
     "tls-keygen": "^3.6.1",

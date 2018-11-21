@@ -15,7 +15,7 @@
     "babel": "./babel.js"
   },
   "devDependencies": {
-    "@ninetails-monorepo-react-ssr/eslint-config-monorepo-ssr": "^0.0.0"
+    "@ninetails-monorepo-react-ssr/eslint-config-monorepo-react-ssr": "^0.0.0"
   },
   "dependencies": {
     "@babel/cli": "^7.1.5",

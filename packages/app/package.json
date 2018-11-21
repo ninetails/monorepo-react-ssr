@@ -12,6 +12,9 @@
   },
   "homepage": "https://github.com/ninetails/monorepo-react-ssr/tree/master/packages/app#readme",
   "devDependencies": {
+    "@ninetails-monorepo-react-ssr/babel-preset-monorepo-react-ssr": "^0.0.0",
+    "@ninetails-monorepo-react-ssr/eslint-config-monorepo-react-ssr": "^0.0.0",
+    "@ninetails-monorepo-react-ssr/helper-gen-dist-package": "^0.0.0",
     "@babel/core": "^7.1.6",
     "babel-core": "^7.0.0-bridge.0",
     "babel-jest": "^23.6.0",
@@ -21,7 +24,7 @@
     "jest-dom": "^2.1.1",
     "jest-environment-jsdom": "^23.4.0",
     "jest-silent-reporter": "^0.1.1",
-    "react-testing-library": "^5.2.3"
+    "react-testing-library": "^5.3.0"
   },
   "dependencies": {
     "react": "^16.7.0-alpha.2",
@@ -37,7 +40,7 @@
     "build:copy:changelog": "cp CHANGELOG.md dist 2>/dev/null || :",
     "build:copy:readme": "cp README.md dist 2>/dev/null || :",
     "build:create:dist": "mkdir -p dist",
-    "build:generate:package": "node ./bin/generate-dist-package.js",
+    "build:generate:package": "generate-dist-package --peer react --peer react-dom",
     "build": "$npm_execpath run build:clean && $npm_execpath run build:create:dist && $npm_execpath run build:copy:all && $npm_execpath run build:generate:package && $npm_execpath run build:babel:prod",
     "coverage": "$npm_execpath run test -- --coverage",
     "lint": "eslint src",

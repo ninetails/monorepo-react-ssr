@@ -1,5 +1,5 @@
 {
-  "name": "@ninetails-monorepo-react-ssr/eslint-config-monorepo-ssr",
+  "name": "@ninetails-monorepo-react-ssr/eslint-config-monorepo-react-ssr",
   "version": "0.0.0",
   "repository": {
     "type": "git",

@@ -1,9 +1,6 @@
----
-to: packages/<%= name %>/package.json
----
 {
-  "name": "<% if (locals.prefix) { -%><%= locals.prefix %><% } else { -%>@ninetails-monorepo-react-ssr/<% } -%><%= name %>",
-  "version": "<% if (locals.version) { -%><%= locals.version %><% } else { -%>0.0.0<% } -%>",
+  "name": "@ninetails-monorepo-react-ssr/helper-gen-dist-package",
+  "version": "0.0.0",
   "private": true,
   "repository": {
     "type": "git",
@@ -13,11 +10,17 @@ to: packages/<%= name %>/package.json
   "bugs": {
     "url": "https://github.com/ninetails/monorepo-react-ssr/issues"
   },
-  "homepage": "https://github.com/ninetails/monorepo-react-ssr/tree/master/packages/<%= name %>#readme",
+  "homepage": "https://github.com/ninetails/monorepo-react-ssr/tree/master/packages/helper-gen-dist-package#readme",
+  "bin": {
+    "generate-dist-package": "./index.js"
+  },
   "devDependencies": {
     "@ninetails-monorepo-react-ssr/eslint-config-monorepo-react-ssr": "^0.0.0"
   },
   "scripts": {
     "lint": "eslint ."
+  },
+  "dependencies": {
+    "command-line-args": "^5.0.2"
   }
 }
