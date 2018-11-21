@@ -1,5 +1,5 @@
 import React from 'react'
-import { renderToString } from 'react-dom/server'
+import { renderToString, renderToNodeStream } from 'react-dom/server'
 import { HeadProvider } from 'react-head'
 import { StaticRouter } from 'react-router-dom'
 import App from './App'
@@ -23,7 +23,9 @@ export default function serverRenderer ({ clientStats, serverStats }) {
       return res.redirect(301, context.url)
     }
 
-    const html = renderToString(
+    res.status(200)
+    res.write('<!doctype html>')
+    renderToNodeStream(
       <html>
         <head
           dangerouslySetInnerHTML={{
@@ -38,8 +40,6 @@ export default function serverRenderer ({ clientStats, serverStats }) {
           <script src={`/${mainSrc}`} />
         </body>
       </html>
-    )
-
-    res.status(200).send(['<!doctype html>', html].join(''))
+    ).pipe(res)
   }
 }
