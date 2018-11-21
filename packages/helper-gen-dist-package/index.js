@@ -8,9 +8,10 @@ const readFileAsync = promisify(readFile)
 const writeFileAsync = promisify(writeFile)
 
 const optionDefinitions = [
-  { name: 'peer', alias: 'p', type: String, multiple: true }
+  { name: 'peer', alias: 'p', type: String, multiple: true, defaultValue: [] },
+  { name: 'ignore', alias: 'i', type: String, multiple: true, defaultValue: [] }
 ]
-const { peer } = commandLineArgs(optionDefinitions)
+const { ignore, peer } = commandLineArgs(optionDefinitions)
 
 const BASE_PATH = process.cwd()
 const PACKAGE_FILE = 'package.json'
@@ -18,7 +19,7 @@ const TARGET_PATH = 'dist'
 
 const resolveDependencies = dependencies =>
   Object.keys(dependencies).reduce((acc, name) => {
-    if (name === 'prop-types') {
+    if (ignore.includes(name)) {
       return acc
     }
 
