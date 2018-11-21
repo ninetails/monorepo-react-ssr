@@ -26,3 +26,13 @@ And for publishing packages, for transpiled ones I will only publish it's transp
   Finds on every changed package since `develop` for a script named `lint` and runs it in parallel. Bail on first error found.
 - **pre-push**: runs test
   Finds on every changed package since `develop` for a script named `test` and runs it in parallel. Bail on first error found.
+
+### Hygen
+
+This repository uses hygen to automate some tasks
+
+#### **yarn generate:package -- --name &lt;package name&gt; [--prefix &lt;prefix&gt;] [--version &lt;version&gt;]**
+
+> alias: HYGEN_TMPLS=.templates hygen package new --name &lt;package name&gt; [--prefix &lt;prefix&gt;] [--version &lt;version&gt;]
+
+Creates a new package inside packages folder

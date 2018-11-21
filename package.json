@@ -6,7 +6,6 @@
     "type": "git",
     "url": "git+https://github.com/ninetails/monorepo-react-ssr.git"
   },
-  "author": "Ninetails - Carlos Kazuo",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/ninetails/monorepo-react-ssr/issues"
@@ -22,7 +21,9 @@
     "@commitlint/cli": "^7.2.1",
     "@commitlint/config-conventional": "^7.1.2",
     "@commitlint/config-lerna-scopes": "^7.2.1",
-    "husky": "^1.1.4",
+    "cross-env": "^5.2.0",
+    "husky": "^1.2.0",
+    "hygen": "^1.6.2",
     "lerna": "^3.4.3"
   },
   "husky": {
@@ -35,6 +36,7 @@
   "scripts": {
     "bootstrap": "lerna bootstrap",
     "clean": "lerna clean --yes 2>/dev/null || :",
+    "generate:package": "cross-env HYGEN_TMPLS=.templates hygen package new",
     "hook:lint": "$npm_execpath run lint -- --since develop --parallel",
     "hook:test": "$npm_execpath run test -- --since develop --parallel",
     "lerna:clean": "lerna run clean 2>/dev/null || :",
