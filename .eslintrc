@@ -1,0 +1,4 @@
+{
+  "root": true,
+  "extends": ["@ninetails-monorepo-react-ssr/monorepo-react-ssr"]
+}

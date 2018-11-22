@@ -14,6 +14,11 @@ module.exports = () => ({
     '@babel/preset-react'
   ],
   plugins: [
+    // React
+    '@babel/plugin-transform-react-display-name',
+    '@babel/plugin-transform-react-inline-elements',
+    '@babel/plugin-transform-react-constant-elements',
+
     // Stage 0
     '@babel/plugin-proposal-function-bind',
 
