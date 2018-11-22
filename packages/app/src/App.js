@@ -1,6 +1,7 @@
 import React from 'react'
 import { Meta, Title } from 'react-head'
 import { Link, Route, Switch } from 'react-router-dom'
+import '@babel/polyfill'
 
 function Home () {
   return (

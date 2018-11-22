@@ -32,6 +32,8 @@ if (process.env.NODE_ENV !== 'production') {
   const webpackHotServerMiddleware = require('webpack-hot-server-middleware')
   const config = require('./webpack.config.js')
   const compiler = webpack(config)
+
+  app.use(express.static('./public'))
   app.use(
     webpackDevMiddleware(compiler, {
       serverSideRender: true,
@@ -51,6 +53,7 @@ if (process.env.NODE_ENV !== 'production') {
   const SERVER_RENDERER_PATH = join(__dirname, './dist/server.js')
   const serverRenderer = require(SERVER_RENDERER_PATH).default
   const clientStats = require(CLIENT_STATS_PATH)
+
   app.use(express.static(CLIENT_ASSETS_DIR))
   app.use(serverRenderer({ clientStats }))
 }

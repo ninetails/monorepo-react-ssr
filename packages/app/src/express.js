@@ -1,45 +1,56 @@
 import React from 'react'
-import { renderToString, renderToNodeStream } from 'react-dom/server'
+import { renderToNodeStream, renderToStaticNodeStream } from 'react-dom/server'
 import { HeadProvider } from 'react-head'
-import { StaticRouter } from 'react-router-dom'
+import { StaticRouter as Router } from 'react-router-dom'
+import promisifyNodeStream from './server/promisifyNodeStream'
+import createPrependStringStream from './server/createPrependStringStream'
 import App from './App'
 
-export default function serverRenderer ({ clientStats, serverStats }) {
+function serverRenderer ({ clientStats, serverStats }) {
   const { main } = clientStats.assetsByChunkName
   const mainSrc = typeof main === 'string' ? main : main[0]
 
-  return (req, res, next) => {
+  return async (req, res, next) => {
     const headTags = []
     const context = {}
-    const content = renderToString(
+
+    const contentStream = renderToNodeStream(
       <HeadProvider headTags={headTags}>
-        <StaticRouter location={req.url} context={context}>
+        <Router location={req.url} context={context}>
           <App />
-        </StaticRouter>
+        </Router>
       </HeadProvider>
     )
+
+    const contentBuffer = await promisifyNodeStream(contentStream)
 
     if (context.url) {
       return res.redirect(301, context.url)
     }
 
-    res.status(200)
-    res.write('<!doctype html>')
-    renderToNodeStream(
+    const headBuffer = await promisifyNodeStream(
+      renderToStaticNodeStream(headTags)
+    )
+
+    renderToStaticNodeStream(
       <html>
         <head
           dangerouslySetInnerHTML={{
-            __html: renderToString(headTags)
+            __html: headBuffer.toString()
           }}
         />
         <body>
           <div
             id={process.env.REACT_APP_ROOT || 'root'}
-            dangerouslySetInnerHTML={{ __html: content }}
+            dangerouslySetInnerHTML={{ __html: contentBuffer.toString() }}
           />
           <script src={`/${mainSrc}`} />
         </body>
       </html>
-    ).pipe(res)
+    )
+      .pipe(createPrependStringStream('<!doctype html>'))
+      .pipe(res.status(200))
   }
 }
+
+export default serverRenderer
