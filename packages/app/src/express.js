@@ -1,8 +1,7 @@
 import React from 'react'
-import { renderToStaticNodeStream, renderToString, renderToStaticMarkup } from 'react-dom/server'
+import { renderToStaticNodeStream, renderToString } from 'react-dom/server'
 import { HeadProvider } from 'react-head'
 import { StaticRouter as Router } from 'react-router-dom'
-import createPrependStringStream from './server/createPrependStringStream'
 import App from './App'
 
 function serverRenderer ({ clientStats, serverStats }) {
@@ -10,12 +9,12 @@ function serverRenderer ({ clientStats, serverStats }) {
   const mainSrc = typeof main === 'string' ? main : main[0]
 
   return async (req, res, next) => {
-    const headTags = []
+    const head = []
     const context = {}
 
     try {
       const content = renderToString(
-        <HeadProvider headTags={headTags}>
+        <HeadProvider headTags={head}>
           <Router location={req.url} context={context}>
             <App />
           </Router>
@@ -26,15 +25,10 @@ function serverRenderer ({ clientStats, serverStats }) {
         return res.redirect(301, context.url)
       }
 
-      const head = renderToStaticMarkup(headTags)
-
+      res.status(200).write('<!doctype html>')
       renderToStaticNodeStream(
         <html>
-          <head
-            dangerouslySetInnerHTML={{
-              __html: head
-            }}
-          />
+          <head>{head}</head>
           <body>
             <div
               id={process.env.REACT_APP_ROOT || 'root'}
@@ -43,10 +37,12 @@ function serverRenderer ({ clientStats, serverStats }) {
             <script src={`/${mainSrc}`} />
           </body>
         </html>
+      ).pipe(
+        res,
+        { end: 'false' }
       )
-        .pipe(createPrependStringStream('<!doctype html>'), { end: 'false' })
-        .pipe(res.status(200), { end: 'false' })
     } catch (err) {
+      // @todo error page
       console.error(err)
       res.status(500).send('Server error')
     }
