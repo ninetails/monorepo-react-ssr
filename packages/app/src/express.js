@@ -1,8 +1,7 @@
 import React from 'react'
-import { renderToNodeStream, renderToStaticNodeStream } from 'react-dom/server'
+import { renderToStaticNodeStream, renderToString, renderToStaticMarkup } from 'react-dom/server'
 import { HeadProvider } from 'react-head'
 import { StaticRouter as Router } from 'react-router-dom'
-import promisifyNodeStream from './server/promisifyNodeStream'
 import createPrependStringStream from './server/createPrependStringStream'
 import App from './App'
 
@@ -14,42 +13,43 @@ function serverRenderer ({ clientStats, serverStats }) {
     const headTags = []
     const context = {}
 
-    const contentStream = renderToNodeStream(
-      <HeadProvider headTags={headTags}>
-        <Router location={req.url} context={context}>
-          <App />
-        </Router>
-      </HeadProvider>
-    )
+    try {
+      const content = renderToString(
+        <HeadProvider headTags={headTags}>
+          <Router location={req.url} context={context}>
+            <App />
+          </Router>
+        </HeadProvider>
+      )
 
-    const contentBuffer = await promisifyNodeStream(contentStream)
+      if (context.url) {
+        return res.redirect(301, context.url)
+      }
 
-    if (context.url) {
-      return res.redirect(301, context.url)
-    }
+      const head = renderToStaticMarkup(headTags)
 
-    const headBuffer = await promisifyNodeStream(
-      renderToStaticNodeStream(headTags)
-    )
-
-    renderToStaticNodeStream(
-      <html>
-        <head
-          dangerouslySetInnerHTML={{
-            __html: headBuffer.toString()
-          }}
-        />
-        <body>
-          <div
-            id={process.env.REACT_APP_ROOT || 'root'}
-            dangerouslySetInnerHTML={{ __html: contentBuffer.toString() }}
+      renderToStaticNodeStream(
+        <html>
+          <head
+            dangerouslySetInnerHTML={{
+              __html: head
+            }}
           />
-          <script src={`/${mainSrc}`} />
-        </body>
-      </html>
-    )
-      .pipe(createPrependStringStream('<!doctype html>'))
-      .pipe(res.status(200))
+          <body>
+            <div
+              id={process.env.REACT_APP_ROOT || 'root'}
+              dangerouslySetInnerHTML={{ __html: content }}
+            />
+            <script src={`/${mainSrc}`} />
+          </body>
+        </html>
+      )
+        .pipe(createPrependStringStream('<!doctype html>'), { end: 'false' })
+        .pipe(res.status(200), { end: 'false' })
+    } catch (err) {
+      console.error(err)
+      res.status(500).send('Server error')
+    }
   }
 }
 
