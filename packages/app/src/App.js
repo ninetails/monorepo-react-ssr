@@ -1,7 +1,6 @@
 import React from 'react'
 import { Meta, Title } from 'react-head'
 import { Link, Route, Switch } from 'react-router-dom'
-import '@babel/polyfill'
 
 function Home () {
   return (
@@ -21,7 +20,7 @@ function About () {
   )
 }
 
-export default () => (
+const App = () => (
   <div>
     <Meta charSet='utf-8' />
     <Meta name='viewport' content='width=device-width, initial-scale=1' />
@@ -41,3 +40,5 @@ export default () => (
     </Switch>
   </div>
 )
+
+export default App

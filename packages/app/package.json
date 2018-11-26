@@ -1,7 +1,6 @@
 {
   "name": "@ninetails-monorepo-react-ssr/app-dev",
   "version": "0.0.0",
-  "private": true,
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ninetails/monorepo-react-ssr.git"
@@ -30,15 +29,15 @@
     "react-testing-library": "^5.3.0"
   },
   "dependencies": {
-    "@babel/polyfill": "^7.0.0",
     "react": "^16.7.0-alpha.2",
     "react-dom": "^16.7.0-alpha.2",
     "react-head": "^3.0.2",
     "react-router-dom": "^4.3.1"
   },
   "scripts": {
-    "build:babel:prod": "cross-env NODE_ENV=production $npm_execpath run build:babel",
-    "build:babel": "babel -d dist -s --ignore 'src/**/*.spec.js','src/**/*.test.js' src",
+    "build:babel:prod": "cross-env NODE_ENV=production $npm_execpath run build:babel -- -s",
+    "build:babel:dev": "cross-env NODE_ENV=development $npm_execpath run build:babel -- --source-maps inline",
+    "build:babel": "babel -d dist --ignore 'src/**/*.spec.js','src/**/*.test.js' src",
     "build:clean": "rm -rf dist/*",
     "build:copy:all": "$npm_execpath run build:copy:changelog && $npm_execpath run build:copy:readme",
     "build:copy:changelog": "cp CHANGELOG.md dist 2>/dev/null || :",
@@ -48,9 +47,10 @@
     "build": "$npm_execpath run build:clean && $npm_execpath run build:create:dist && $npm_execpath run build:copy:all && $npm_execpath run build:generate:package && $npm_execpath run build:babel:prod",
     "coverage": "$npm_execpath run test -- --coverage",
     "lint": "eslint src",
+    "postinstall": "$npm_execpath run build",
     "test:jest": "jest",
     "test:watch": "$npm_execpath run test:jest -- --watch",
     "test": "$npm_execpath run test:jest -- --reporters jest-silent-reporter",
-    "watch": "$npm_execpath run build:clean && $npm_execpath run build:create:dist && $npm_execpath run build:copy:all && $npm_execpath run build:generate:package && $npm_execpath run build:babel -- -w"
+    "watch": "$npm_execpath run build:clean && $npm_execpath run build:create:dist && $npm_execpath run build:generate:package && $npm_execpath run build:babel:dev -- -w"
   }
 }

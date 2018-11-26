@@ -11,7 +11,7 @@ const dist = join(__dirname, 'dist')
 const mode = process.env.NODE_ENV || 'development'
 const devtool =
   process.env.NODE_ENV === 'development'
-    ? 'cheap-eval-source-map'
+    ? 'inline-module-source-map'
     : 'source-map'
 const clientFilename =
   process.env.NODE_ENV === 'production'
@@ -26,9 +26,10 @@ module.exports = [
     target: 'web',
     entry:
       process.env.NODE_ENV === 'production'
-        ? ['@ninetails-monorepo-react-ssr/app/client.js']
+        ? ['./polyfill.js', '@ninetails-monorepo-react-ssr/app/client.js']
         : [
           'webpack-hot-middleware/client?name=client&reload=true',
+          './polyfill.js',
           '@ninetails-monorepo-react-ssr/app/client.js'
         ],
     output: {
@@ -41,12 +42,27 @@ module.exports = [
     node: {
       process: false
     },
+    module: {
+      rules: [
+        {
+          test: /\.m?js$/,
+          exclude: /node_modules/,
+          use: {
+            loader: 'babel-loader',
+            options: {
+              presets: ['@babel/preset-env']
+            }
+          }
+        }
+      ]
+    },
     optimization: {
       minimizer:
         process.env.NODE_ENV === 'development'
           ? []
           : [
             new UglifyJsPlugin({
+              sourceMap: true,
               uglifyOptions: {
                 output: {
                   comments: false
@@ -70,8 +86,9 @@ module.exports = [
     target: 'node',
     entry:
       process.env.NODE_ENV === 'production'
-        ? ['@ninetails-monorepo-react-ssr/app/express.js']
+        ? ['./polyfill.js', '@ninetails-monorepo-react-ssr/app/express.js']
         : [
+          './polyfill.js',
           'webpack-hot-middleware/client?name=server',
           '@ninetails-monorepo-react-ssr/app/express.js'
         ],
@@ -84,6 +101,20 @@ module.exports = [
     devtool,
     node: {
       process: false
+    },
+    module: {
+      rules: [
+        {
+          test: /\.m?js$/,
+          exclude: /node_modules/,
+          use: {
+            loader: 'babel-loader',
+            options: {
+              presets: ['@babel/preset-env']
+            }
+          }
+        }
+      ]
     },
     plugins: [
       process.env.NODE_ENV === 'production'

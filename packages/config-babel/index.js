@@ -4,10 +4,9 @@ module.exports = () => ({
       '@babel/preset-env',
       {
         useBuiltIns: 'entry',
-        modules: false,
         targets: {
           node: 'current',
-          browsers: 'last 2 versions'
+          browsers: ['>0.2%', 'not dead', 'not ie <= 11', 'not op_mini all']
         }
       }
     ],

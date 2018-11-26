@@ -11,6 +11,12 @@
     "url": "https://github.com/ninetails/monorepo-react-ssr/issues"
   },
   "homepage": "https://github.com/ninetails/monorepo-react-ssr/tree/master/packages/server-express#readme",
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ],
   "devDependencies": {
     "@babel/core": "^7.1.6",
     "@ninetails-monorepo-react-ssr/babel-preset-monorepo-react-ssr": "^0.0.0",
@@ -19,7 +25,7 @@
     "dotenv": "^6.1.0",
     "tls-keygen": "^3.6.1",
     "uglifyjs-webpack-plugin": "^2.0.1",
-    "webpack": "^4.26.0",
+    "webpack": "^4.26.1",
     "webpack-cli": "^3.1.2",
     "webpack-dev-middleware": "^3.4.0",
     "webpack-hot-middleware": "^2.24.3",
@@ -27,7 +33,9 @@
     "webpack-stats-plugin": "^0.2.1"
   },
   "dependencies": {
+    "@babel/polyfill": "^7.0.0",
     "@ninetails-monorepo-react-ssr/app": "^0.0.0",
+    "babel-loader": "^8.0.4",
     "express": "^4.16.4",
     "react": "^16.7.0-alpha.2",
     "react-dom": "^16.7.0-alpha.2",
