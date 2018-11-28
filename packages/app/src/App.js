@@ -1,11 +1,13 @@
 import React from 'react'
-import { Meta, Title } from 'react-head'
+import Head from '@ninetails-monorepo-react-ssr/react-kabocha'
 import { Link, Route, Switch } from 'react-router-dom'
 
 function Home () {
   return (
     <div>
-      <Title>Home</Title>
+      <Head>
+        <title>Home</title>
+      </Head>
       Home
     </div>
   )
@@ -14,7 +16,9 @@ function Home () {
 function About () {
   return (
     <div>
-      <Title>About</Title>
+      <Head>
+        <title>About</title>
+      </Head>
       About
     </div>
   )
@@ -22,8 +26,10 @@ function About () {
 
 const App = () => (
   <div>
-    <Meta charSet='utf-8' />
-    <Meta name='viewport' content='width=device-width, initial-scale=1' />
+    <Head>
+      <meta charSet='utf-8' />
+      <meta name='viewport' content='width=device-width, initial-scale=1' />
+    </Head>
     <nav>
       <ul>
         <li>
