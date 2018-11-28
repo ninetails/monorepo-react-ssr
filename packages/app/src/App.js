@@ -5,11 +5,16 @@ import { Link, Route, Switch } from 'react-router-dom'
 const UniversalSuspense = global.window ? Suspense : Fragment
 
 const test = {
-  read (timeout) {
+  read (timeout, cache = global.window) {
     if (this.value) {
+      if (cache) {
+        return this.value
+      }
       const output = this.value
+
       delete this.value
       delete this.promise
+
       return output
     }
 
