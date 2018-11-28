@@ -7,22 +7,40 @@ import {
 import { StaticRouter as Router } from 'react-router-dom'
 import App from './App'
 
+async function renderContent (props) {
+  try {
+    return renderToString(
+      <HeadProvider registry={props.registry}>
+        <Router location={props.location} context={props.context}>
+          <App />
+        </Router>
+      </HeadProvider>
+    )
+  } catch (err) {
+    if (err instanceof Promise) {
+      await err
+
+      return renderContent(props)
+    }
+
+    throw err
+  }
+}
+
 function serverRenderer ({ clientStats, serverStats }) {
   const { main } = clientStats.assetsByChunkName
   const mainSrc = typeof main === 'string' ? main : main[0]
 
-  return (req, res, next) => {
+  return async (req, res, next) => {
     const registry = []
     const context = {}
 
     try {
-      const content = renderToString(
-        <HeadProvider registry={registry}>
-          <Router location={req.url} context={context}>
-            <App />
-          </Router>
-        </HeadProvider>
-      )
+      const content = await renderContent({
+        context,
+        location: req.url,
+        registry
+      })
 
       if (context.url) {
         return res.redirect(301, context.url)

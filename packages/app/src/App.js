@@ -1,6 +1,39 @@
-import React from 'react'
+import React, { Fragment, Suspense } from 'react'
 import Head from '@ninetails-monorepo-react-ssr/react-kabocha'
 import { Link, Route, Switch } from 'react-router-dom'
+
+const UniversalSuspense = global.window ? Suspense : Fragment
+
+const test = {
+  read (timeout) {
+    if (this.value) {
+      const output = this.value
+      delete this.value
+      delete this.promise
+      return output
+    }
+
+    if (this.promise) {
+      throw this.promise
+    }
+
+    this.promise = new Promise(resolve => {
+      console.log('settimeout start', Date.now() / 1000)
+      setTimeout(() => {
+        console.log('settimeout end', Date.now() / 1000)
+        this.value = 'foo'
+        resolve(this.value)
+      }, timeout)
+    })
+
+    throw this.promise
+  }
+}
+
+function LazyTest () {
+  const testValue = test.read(2000)
+  return <div>{testValue}</div>
+}
 
 function Home () {
   return (
@@ -20,6 +53,9 @@ function About () {
         <title>About</title>
       </Head>
       About
+      <UniversalSuspense maxDuration={500} fallback={<div>loading...</div>}>
+        <LazyTest />
+      </UniversalSuspense>
     </div>
   )
 }
