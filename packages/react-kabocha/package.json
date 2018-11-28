@@ -1,6 +1,7 @@
 {
-  "name": "@ninetails-monorepo-react-ssr/app-dev",
+  "name": "@ninetails-monorepo-react-ssr/react-kabocha-dev",
   "version": "0.0.0",
+  "private": true,
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ninetails/monorepo-react-ssr.git"
@@ -9,9 +10,8 @@
   "bugs": {
     "url": "https://github.com/ninetails/monorepo-react-ssr/issues"
   },
-  "homepage": "https://github.com/ninetails/monorepo-react-ssr/tree/master/packages/app#readme",
+  "homepage": "https://github.com/ninetails/monorepo-react-ssr/tree/master/packages/react-kabocha#readme",
   "devDependencies": {
-    "@babel/core": "^7.1.6",
     "@ninetails-monorepo-react-ssr/babel-preset-monorepo-react-ssr": "^0.0.0",
     "@ninetails-monorepo-react-ssr/eslint-config-monorepo-react-ssr": "^0.0.0",
     "@ninetails-monorepo-react-ssr/helper-gen-dist-package": "^0.0.0",
@@ -29,10 +29,9 @@
     "react-testing-library": "^5.3.0"
   },
   "dependencies": {
-    "@ninetails-monorepo-react-ssr/react-kabocha": "^0.0.0",
+    "debounce": "^1.2.0",
     "react": "^16.7.0-alpha.2",
-    "react-dom": "^16.7.0-alpha.2",
-    "react-router-dom": "^4.3.1"
+    "react-dom": "^16.7.0-alpha.2"
   },
   "scripts": {
     "build:babel:prod": "cross-env NODE_ENV=production $npm_execpath run build:babel -- -s",
@@ -50,7 +49,7 @@
     "postinstall": "$npm_execpath run build",
     "test:jest": "jest",
     "test:watch": "$npm_execpath run test:jest -- --watch",
-    "test": "$npm_execpath run test:jest -- --reporters jest-silent-reporter",
-    "watch": "$npm_execpath run build:clean && $npm_execpath run build:create:dist && $npm_execpath run build:generate:package && $npm_execpath run build:babel:dev -- -w"
+    "test:todo": "$npm_execpath run test:jest -- --reporters jest-silent-reporter",
+    "watch": "$npm_execpath run build:clean && $npm_execpath run build:create:dist && $npm_execpath run build:copy:all && $npm_execpath run build:generate:package && $npm_execpath run build:babel:dev -- -w"
   }
 }

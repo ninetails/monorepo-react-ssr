@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { HeadProvider } from 'react-head'
+import { HeadProvider } from '@ninetails-monorepo-react-ssr/react-kabocha'
 import { BrowserRouter as Router } from 'react-router-dom'
 import getRoot from './client/getRoot'
 import App from './App'
