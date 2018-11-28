@@ -26,10 +26,13 @@ module.exports = [
     target: 'web',
     entry:
       process.env.NODE_ENV === 'production'
-        ? ['./polyfill.js', '@ninetails-monorepo-react-ssr/app/client.js']
+        ? [
+          'idempotent-babel-polyfill',
+          '@ninetails-monorepo-react-ssr/app/client.js'
+        ]
         : [
           'webpack-hot-middleware/client?name=client&reload=true',
-          './polyfill.js',
+          'idempotent-babel-polyfill',
           '@ninetails-monorepo-react-ssr/app/client.js'
         ],
     output: {
@@ -86,9 +89,12 @@ module.exports = [
     target: 'node',
     entry:
       process.env.NODE_ENV === 'production'
-        ? ['./polyfill.js', '@ninetails-monorepo-react-ssr/app/express.js']
+        ? [
+          'idempotent-babel-polyfill',
+          '@ninetails-monorepo-react-ssr/app/express.js'
+        ]
         : [
-          './polyfill.js',
+          'idempotent-babel-polyfill',
           'webpack-hot-middleware/client?name=server',
           '@ninetails-monorepo-react-ssr/app/express.js'
         ],
