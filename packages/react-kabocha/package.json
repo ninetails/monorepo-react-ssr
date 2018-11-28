@@ -49,7 +49,7 @@
     "postinstall": "$npm_execpath run build",
     "test:jest": "jest",
     "test:watch": "$npm_execpath run test:jest -- --watch",
-    "test": "$npm_execpath run test:jest -- --reporters jest-silent-reporter",
+    "test:todo": "$npm_execpath run test:jest -- --reporters jest-silent-reporter",
     "watch": "$npm_execpath run build:clean && $npm_execpath run build:create:dist && $npm_execpath run build:copy:all && $npm_execpath run build:generate:package && $npm_execpath run build:babel:dev -- -w"
   }
 }
