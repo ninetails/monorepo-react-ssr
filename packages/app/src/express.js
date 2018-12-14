@@ -2,7 +2,7 @@ import React from 'react'
 import { renderToStaticNodeStream, renderToString } from 'react-dom/server'
 import {
   HeadProvider,
-  extractHeadTags
+  createRegistry
 } from '@ninetails-monorepo-react-ssr/react-kabocha'
 import { StaticRouter as Router } from 'react-router-dom'
 import App from './App'
@@ -32,7 +32,7 @@ function serverRenderer ({ clientStats, serverStats }) {
   const mainSrc = typeof main === 'string' ? main : main[0]
 
   return async (req, res, next) => {
-    const registry = []
+    const registry = createRegistry()
     const context = {}
 
     try {
@@ -46,12 +46,10 @@ function serverRenderer ({ clientStats, serverStats }) {
         return res.redirect(301, context.url)
       }
 
-      const head = extractHeadTags(registry)
-
       res.status(200).write('<!doctype html>')
       renderToStaticNodeStream(
         <html>
-          <head>{head}</head>
+          <head>{registry.head()}</head>
           <body>
             <div
               id={process.env.REACT_APP_ROOT || 'root'}

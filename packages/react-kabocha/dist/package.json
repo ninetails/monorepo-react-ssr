@@ -11,7 +11,8 @@
   },
   "homepage": "https://github.com/ninetails/monorepo-react-ssr/tree/master/packages/react-kabocha#readme",
   "dependencies": {
-    "debounce": "^1.2.0"
+    "debounce": "^1.2.0",
+    "lodash": "^4.17.11"
   },
   "peerDependencies": {
     "react": "^16.7.0-alpha.2",
