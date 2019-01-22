@@ -4,6 +4,7 @@
 
 [![GitHub license](https://img.shields.io/github/license/ninetails/monorepo-react-ssr.svg)](https://github.com/ninetails/monorepo-react-ssr/blob/master/LICENSE)
 [![Build Status](https://travis-ci.org/ninetails/monorepo-react-ssr.svg?branch=master)](https://travis-ci.org/ninetails/monorepo-react-ssr)
+[![DeepScan grade](https://deepscan.io/api/teams/2795/projects/4133/branches/34233/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=2795&pid=4133&bid=34233)
 
 ## Usage
 
