@@ -18,11 +18,13 @@
     ]
   },
   "devDependencies": {
-    "@ninetails-monorepo-react-ssr/babel-preset-monorepo-react-ssr": "^0.0.0",
     "@commitlint/cli": "^7.2.1",
     "@commitlint/config-conventional": "^7.1.2",
     "@commitlint/config-lerna-scopes": "^7.2.1",
+    "@ninetails-monorepo-react-ssr/babel-preset-monorepo-react-ssr": "^0.0.0",
     "cross-env": "^5.2.0",
+    "cz-conventional-changelog": "^2.1.0",
+    "git-cz": "^1.8.0",
     "husky": "^1.2.0",
     "hygen": "^1.6.2",
     "lerna": "^3.4.3"
@@ -34,9 +36,15 @@
       "pre-push": "npm run hook:test"
     }
   },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
   "scripts": {
     "bootstrap": "lerna bootstrap",
     "clean": "lerna clean --yes 2>/dev/null || :",
+    "co": "git-cz",
     "generate:package": "cross-env HYGEN_TMPLS=.templates hygen package new",
     "hook:lint": "$npm_execpath run lint -- --since develop --parallel",
     "hook:test": "$npm_execpath run test -- --since develop --parallel",
