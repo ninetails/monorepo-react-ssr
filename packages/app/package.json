@@ -1,6 +1,7 @@
 {
   "name": "@ninetails-monorepo-react-ssr/app-dev",
   "version": "0.0.0",
+  "private": true,
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ninetails/monorepo-react-ssr.git"
@@ -15,6 +16,7 @@
     "@ninetails-monorepo-react-ssr/babel-preset-monorepo-react-ssr": "^0.0.0",
     "@ninetails-monorepo-react-ssr/eslint-config-monorepo-react-ssr": "^0.0.0",
     "@ninetails-monorepo-react-ssr/helper-gen-dist-package": "^0.0.0",
+    "@ninetails-monorepo-react-ssr/ssr-express-scripts": "^0.0.0",
     "babel-core": "^7.0.0-bridge.0",
     "babel-jest": "^23.6.0",
     "babel-plugin-react-remove-properties": "^0.2.5",
@@ -44,10 +46,13 @@
     "build:copy:readme": "cp README.md dist 2>/dev/null || :",
     "build:create:dist": "mkdir -p dist",
     "build:generate:package": "generate-dist-package --peer react --peer react-dom",
-    "build": "$npm_execpath run build:clean && $npm_execpath run build:create:dist && $npm_execpath run build:copy:all && $npm_execpath run build:generate:package && $npm_execpath run build:babel:prod",
+    "build:app": "$npm_execpath run build:clean && $npm_execpath run build:create:dist && $npm_execpath run build:copy:all && $npm_execpath run build:generate:package && $npm_execpath run build:babel:prod",
+    "build": "ssr-scripts build",
     "coverage": "$npm_execpath run test -- --coverage",
+    "dev": "ssr-scripts dev",
     "lint": "eslint src",
     "postinstall": "$npm_execpath run build",
+    "start": "ssr-scripts start",
     "test:jest": "jest",
     "test:watch": "$npm_execpath run test:jest -- --watch",
     "test": "$npm_execpath run test:jest -- --reporters jest-silent-reporter",
