@@ -30,14 +30,10 @@
     "react-testing-library": "^5.4.4"
   },
   "dependencies": {
-    "@ninetails-monorepo-react-ssr/react-kabocha": "^0.0.0",
     "react": "^16.8.0-alpha.1",
-    "react-dom": "^16.8.0-alpha.1",
-    "react-router-dom": "^4.3.1"
+    "react-dom": "^16.8.0-alpha.1"
   },
   "scripts": {
-    "build:create:dist": "mkdir -p dist",
-    "build:app": "$npm_execpath run build:clean && $npm_execpath run build:create:lib && $npm_execpath run build:babel:prod",
     "build": "ssr-scripts build",
     "coverage": "$npm_execpath run test -- --coverage",
     "dev": "ssr-scripts dev",

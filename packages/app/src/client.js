@@ -1,16 +1,26 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { HeadProvider } from '@ninetails-monorepo-react-ssr/react-kabocha'
-import { BrowserRouter as Router } from 'react-router-dom'
-import getRoot from './client/getRoot'
 import App from './App'
 
-const root = getRoot(process.env.REACT_APP_ROOT)
+function getRoot (
+  id = 'root',
+  { tag = 'div', document = window.document } = {}
+) {
+  let root = document.getElementById(id)
 
-ReactDOM.createRoot(root, { hydrate: root.hasChildNodes() }).render(
-  <HeadProvider>
-    <Router>
-      <App />
-    </Router>
-  </HeadProvider>
-)
+  if (!root) {
+    root = document.createElement(tag)
+    root.id = id
+    document.body.appendChild(root)
+  }
+
+  return root
+}
+
+function init (root = getRoot(process.env.REACT_APP_ROOT)) {
+  ReactDOM.createRoot(root, { hydrate: root.hasChildNodes() }).render(
+    <App />
+  )
+}
+
+init()
