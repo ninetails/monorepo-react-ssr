@@ -1,6 +1,6 @@
 import React from 'react'
 import { renderToStaticNodeStream, renderToString } from 'react-dom/server'
-import App from './App'
+import App from './app'
 
 async function renderContent (props = {}) {
   try {
