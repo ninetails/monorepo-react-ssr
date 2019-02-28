@@ -1,10 +1,9 @@
 module.exports = {
   browser: true,
   collectCoverageFrom: ['<rootDir>/src/**/*.js'],
+  reporters: process.env.CI ? [['jest-silent-reporter', { useDots: true }]] : [],
   roots: ['<rootDir>/src'],
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
   transform: {
     '^.+\\.js$': 'babel-jest'
-  },
-  verbose: true
+  }
 }

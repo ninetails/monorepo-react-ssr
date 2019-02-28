@@ -12,20 +12,11 @@
   },
   "homepage": "https://github.com/ninetails/monorepo-react-ssr/tree/master/packages/app#readme",
   "devDependencies": {
-    "@babel/core": "^7.2.2",
     "@ninetails-monorepo-react-ssr/babel-preset-monorepo-react-ssr": "^0.0.0",
     "@ninetails-monorepo-react-ssr/eslint-config-monorepo-react-ssr": "^0.0.0",
     "@ninetails-monorepo-react-ssr/ssr-express-scripts": "^0.0.0",
-    "babel-core": "^7.0.0-bridge.0",
-    "babel-jest": "^24.1.0",
     "babel-plugin-react-remove-properties": "^0.3.0",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.23",
-    "cross-env": "^5.2.0",
-    "jest": "^24.1.0",
-    "jest-cli": "^24.1.0",
-    "jest-dom": "^3.0.0",
-    "jest-environment-jsdom": "^24.0.0",
-    "jest-silent-reporter": "^0.1.1",
     "prop-types": "^15.6.2",
     "react-testing-library": "^6.0.0"
   },
@@ -41,7 +32,7 @@
     "start": "ssr-scripts start",
     "test:jest": "jest",
     "test:watch": "$npm_execpath run test:jest -- --watch",
-    "test": "$npm_execpath run test:jest -- --reporters jest-silent-reporter",
+    "test": "ssr-scripts test",
     "watch": "$npm_execpath run build:clean && $npm_execpath run build:create:lib && $npm_execpath run build:babel:dev -- -w"
   }
 }

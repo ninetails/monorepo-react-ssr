@@ -4,19 +4,16 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const { StatsWriterPlugin } = require('webpack-stats-plugin')
 const definePluginFactory = require('./helpers/definePluginFactory')
 
-require('./loadenv')
-
-const dist = join(process.env.NODE_ENV === 'development' ? __dirname : process.cwd(), 'build')
-
 const mode = process.env.NODE_ENV || 'development'
-const devtool =
-  process.env.NODE_ENV === 'development'
-    ? 'inline-module-source-map'
-    : 'source-map'
-const clientFilename =
-  process.env.NODE_ENV === 'production'
-    ? 'assets/[name].[hash].js'
-    : 'assets/[name].js'
+const isProd = mode === 'production'
+const ifProd = (a, b) => isProd ? a : b
+const isDev = mode === 'development'
+const ifDev = (a, b) => isDev ? a : b
+
+const dist = join(ifDev(__dirname, process.cwd()), 'dist')
+
+const devtool = ifDev('inline-module-source-map', 'source-map')
+const clientFilename = ifProd('assets/[name].[contenthash:8].js', 'assets/[name].js')
 
 const customEnvVars = ['ASSET_PATH']
 
@@ -25,16 +22,11 @@ module.exports = [
     name: 'client',
     target: 'web',
     entry:
-      process.env.NODE_ENV === 'production'
-        ? [
+      ifDev(['webpack-hot-middleware/client?name=client&reload=true'], [])
+        .concat([
           'idempotent-babel-polyfill',
           join(process.cwd(), 'src', 'client.js')
-        ]
-        : [
-          'webpack-hot-middleware/client?name=client&reload=true',
-          'idempotent-babel-polyfill',
-          join(process.cwd(), 'src', 'client.js')
-        ],
+        ]),
     output: {
       path: `${dist}/client`,
       publicPath: process.env.ASSET_PATH || '/',
@@ -61,9 +53,8 @@ module.exports = [
     },
     optimization: {
       minimizer:
-        process.env.NODE_ENV === 'development'
-          ? []
-          : [
+        ifProd(
+          [
             new UglifyJsPlugin({
               sourceMap: true,
               uglifyOptions: {
@@ -72,12 +63,34 @@ module.exports = [
                 }
               }
             })
-          ]
+          ],
+          []
+        ),
+      splitChunks: {
+        cacheGroups: {
+          vendor: {
+            test: /node_modules\/(?!react|core-js)/,
+            chunks: 'initial',
+            name: 'vendor',
+            enforce: true
+          },
+          react: {
+            test: /node_modules\/react/,
+            chunks: 'initial',
+            name: 'react',
+            enforce: true
+          },
+          corejs: {
+            test: /node_modules\/core-js/,
+            chunks: 'initial',
+            name: 'corejs',
+            enforce: true
+          }
+        }
+      }
     },
     plugins: [
-      process.env.NODE_ENV === 'production'
-        ? () => undefined
-        : new webpack.HotModuleReplacementPlugin(),
+      ifDev(new webpack.HotModuleReplacementPlugin(), () => undefined),
       new StatsWriterPlugin({
         filename: 'stats.json'
       }),
@@ -88,16 +101,11 @@ module.exports = [
     name: 'server',
     target: 'node',
     entry:
-      process.env.NODE_ENV === 'production'
-        ? [
+      ifDev(['webpack-hot-middleware/client?name=server'], [])
+        .concat([
           'idempotent-babel-polyfill',
           join(process.cwd(), 'src', 'express.js')
-        ]
-        : [
-          'idempotent-babel-polyfill',
-          'webpack-hot-middleware/client?name=server',
-          join(process.cwd(), 'src', 'express.js')
-        ],
+        ]),
     output: {
       path: dist,
       filename: 'server.js',
@@ -123,9 +131,7 @@ module.exports = [
       ]
     },
     plugins: [
-      process.env.NODE_ENV === 'production'
-        ? () => undefined
-        : new webpack.HotModuleReplacementPlugin(),
+      ifDev(new webpack.HotModuleReplacementPlugin(), () => undefined),
       definePluginFactory(customEnvVars)
     ]
   }
