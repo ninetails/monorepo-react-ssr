@@ -1,5 +1,6 @@
 module.exports = {
   extends: ['standard', 'standard-react'],
+  plugins: ['react-hooks'],
   parser: 'babel-eslint',
   env: {
     browser: true,
@@ -13,5 +14,9 @@ module.exports = {
     ecmaFeatures: {
       jsx: true
     }
+  },
+  rules: {
+    'react-hooks/rules-of-hooks': 'error',
+    'react-hooks/exhaustive-deps': 'warn'
   }
 }
