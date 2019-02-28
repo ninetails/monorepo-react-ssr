@@ -10,7 +10,7 @@ const ifProd = (a, b) => isProd ? a : b
 const isDev = mode === 'development'
 const ifDev = (a, b) => isDev ? a : b
 
-const dist = join(ifDev(__dirname, process.cwd()), 'dist')
+const dist = join(process.cwd(), 'dist')
 
 const devtool = ifDev('inline-module-source-map', 'source-map')
 const clientFilename = ifProd('assets/[name].[contenthash:8].js', 'assets/[name].js')

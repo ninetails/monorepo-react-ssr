@@ -8,13 +8,12 @@ const app = express()
 
 const PORT = process.env.PORT || 3000
 
-module.exports = function run ({ stats }) {
+module.exports = function run ({ config, stats }) {
   if (process.env.NODE_ENV !== 'production') {
     const webpack = require('webpack')
     const webpackDevMiddleware = require('webpack-dev-middleware')
     const webpackHotMiddleware = require('webpack-hot-middleware')
     const webpackHotServerMiddleware = require('webpack-hot-server-middleware')
-    const config = require('./webpack.config.js')
     const compiler = webpack(config)
 
     app.use(express.static(join(process.cwd(), 'public')))

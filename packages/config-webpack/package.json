@@ -1,0 +1,26 @@
+{
+  "name": "@ninetails-monorepo-react-ssr/webpack-config",
+  "version": "0.0.0",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ninetails/monorepo-react-ssr.git"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ninetails/monorepo-react-ssr/issues"
+  },
+  "homepage": "https://github.com/ninetails/monorepo-react-ssr/tree/master/packages/config-webpack#readme",
+  "main": "index.js",
+  "dependencies": {
+    "@babel/core": "^7.2.2",
+    "@ninetails-monorepo-react-ssr/babel-preset-monorepo-react-ssr": "^0.0.0",
+    "babel-loader": "^8.0.5",
+    "uglifyjs-webpack-plugin": "^2.1.1",
+    "webpack": "^4.29.0",
+    "webpack-stats-plugin": "^0.2.1"
+  },
+  "scripts": {
+    "lint": "eslint ."
+  }
+}

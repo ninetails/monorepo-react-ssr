@@ -15,8 +15,10 @@
     "@ninetails-monorepo-react-ssr/babel-preset-monorepo-react-ssr": "^0.0.0",
     "@ninetails-monorepo-react-ssr/eslint-config-monorepo-react-ssr": "^0.0.0",
     "@ninetails-monorepo-react-ssr/ssr-express-scripts": "^0.0.0",
+    "@ninetails-monorepo-react-ssr/webpack-config": "^0.0.0",
     "babel-plugin-react-remove-properties": "^0.3.0",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.23",
+    "cross-env": "^5.2.0",
     "prop-types": "^15.6.2",
     "react-testing-library": "^6.0.0"
   },
@@ -25,9 +27,9 @@
     "react-dom": "^16.8.0-alpha.1"
   },
   "scripts": {
-    "build": "ssr-scripts build",
+    "build": "cross-env WEBPACK_CONFIG=@ninetails-monorepo-react-ssr/webpack-config ssr-scripts build",
     "coverage": "$npm_execpath run test -- --coverage",
-    "dev": "ssr-scripts dev",
+    "dev": "cross-env WEBPACK_CONFIG=@ninetails-monorepo-react-ssr/webpack-config ssr-scripts dev",
     "lint": "eslint src",
     "start": "ssr-scripts start",
     "test:jest": "jest",

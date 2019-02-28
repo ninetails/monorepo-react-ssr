@@ -5,6 +5,8 @@ const commandLineUsage = require('command-line-usage')
 const jest = require('jest')
 const webpack = require('webpack')
 
+const config = require(process.env.WEBPACK_CONFIG || join(process.cwd(), 'webpack.config.js'))
+
 const mainDefinitions = [
   {
     name: 'help',
@@ -70,16 +72,15 @@ require('./loadenv')
 switch (command) {
   case 'dev':
     process.env.NODE_ENV = 'development'
-    require('./server')(getStats(verbose))
+    require('./server')({ config, stats: getStats(verbose) })
     break
   case 'start':
     process.env.NODE_ENV = 'production'
-    require('./server')(getStats(verbose))
+    require('./server')({ config, stats: getStats(verbose) })
     break
   case 'build':
     process.env.NODE_ENV = 'production'
-    const webpackConfig = require('./webpack.config')
-    webpack(webpackConfig, (err, stats) => {
+    webpack(config, (err, stats) => {
       if (err) {
         console.error(err.stack || err)
         if (err.details) {
