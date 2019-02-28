@@ -1,6 +1,7 @@
 {
   "name": "@ninetails-monorepo-react-ssr/babel-preset-monorepo-react-ssr",
   "version": "0.0.0",
+  "private": true,
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ninetails/monorepo-react-ssr.git"
