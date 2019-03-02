@@ -4,7 +4,7 @@ import App from './app'
 
 function getRoot (
   id = 'root',
-  { tag = 'div', document = window.document } = {}
+  { tag = 'div', document = global.document } = {}
 ) {
   let root = document.getElementById(id)
 
@@ -18,9 +18,9 @@ function getRoot (
 }
 
 function init (root = getRoot(process.env.REACT_APP_ROOT)) {
-  ReactDOM.createRoot(root, { hydrate: root.hasChildNodes() }).render(
-    <App />
-  )
+  // ReactDOM.createRoot(root, { hydrate: root.hasChildNodes() }).render(...)
+  const renderFn = root.hasChildNodes() ? ReactDOM.hydrate : ReactDOM.render
+  renderFn(<App />, root)
 }
 
 init()

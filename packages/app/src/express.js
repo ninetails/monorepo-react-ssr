@@ -18,10 +18,28 @@ async function renderContent (props = {}) {
   }
 }
 
-function serverRenderer ({ clientStats, serverStats }) {
-  const { main } = clientStats.assetsByChunkName
-  const mainSrc = typeof main === 'string' ? main : main[0]
+const createRenderChunk = ({ assetsByChunkName }) => fn => {
+  function renderChunk (chunk, key = '') {
+    if (!chunk) {
+      return null
+    }
 
+    if (typeof chunk === 'string') {
+      return fn(chunk, key)
+    }
+
+    if (Array.isArray(chunk)) {
+      return chunk.map((curr, i) => renderChunk(curr, `${key}-${i}`))
+    }
+
+    return Object.keys(chunk).map(chunkName => renderChunk(chunk[chunkName], chunkName))
+  }
+
+  return renderChunk(assetsByChunkName)
+}
+
+function serverRenderer ({ clientStats, serverStats }) {
+  const renderChunks = createRenderChunk(clientStats)
   return async (req, res, next) => {
     try {
       const content = await renderContent()
@@ -30,6 +48,7 @@ function serverRenderer ({ clientStats, serverStats }) {
       renderToStaticNodeStream(
         <html>
           <head>
+            {renderChunks((chunk, key) => <link key={key} rel='preload' as='script' href={chunk} />)}
             <title>React App</title>
           </head>
           <body>
@@ -37,7 +56,7 @@ function serverRenderer ({ clientStats, serverStats }) {
               id={process.env.REACT_APP_ROOT || 'root'}
               dangerouslySetInnerHTML={{ __html: content }}
             />
-            <script src={`/${mainSrc}`} />
+            {renderChunks((chunk, key) => <script key={key} src={chunk} async />)}
           </body>
         </html>
       ).pipe(
