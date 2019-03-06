@@ -31,7 +31,7 @@
     "coverage": "$npm_execpath run test -- --coverage",
     "dev": "cross-env WEBPACK_CONFIG=@ninetails-monorepo-react-ssr/webpack-config ssr-scripts dev",
     "lint": "eslint src",
-    "start": "ssr-scripts start",
+    "start": "cross-env WEBPACK_CONFIG=@ninetails-monorepo-react-ssr/webpack-config ssr-scripts start",
     "test:jest": "jest",
     "test:watch": "$npm_execpath run test:jest -- --watch",
     "test": "ssr-scripts test",

@@ -1,5 +1,6 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
+// import { hydrate, render } from 'react-dom'
+import { unstable_createRoot } from 'react-dom' // eslint-disable-line camelcase
 import App from './app'
 
 function getRoot (
@@ -18,9 +19,11 @@ function getRoot (
 }
 
 function init (root = getRoot(process.env.REACT_APP_ROOT)) {
-  // ReactDOM.createRoot(root, { hydrate: root.hasChildNodes() }).render(...)
-  const renderFn = root.hasChildNodes() ? ReactDOM.hydrate : ReactDOM.render
-  renderFn(<App />, root)
+  // createRoot(root, { hydrate: root.hasChildNodes() }).render(...)
+  unstable_createRoot(root, { hydrate: root.hasChildNodes() }).render(<App />)
+
+  // const renderFn = root.hasChildNodes() ? hydrate : render
+  // renderFn(<App />, root)
 }
 
 init()
