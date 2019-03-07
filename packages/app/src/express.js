@@ -1,48 +1,18 @@
 import React from 'react'
-import { renderToStaticNodeStream, renderToString } from 'react-dom/server'
+import { renderToStaticNodeStream } from 'react-dom/server'
+import renderContent from './helpers/renderContent'
+import createRenderChunk from './helpers/createRenderChunk'
 import App from './app'
 
-async function renderContent (props = {}) {
-  try {
-    return renderToString(
-      <App />
-    )
-  } catch (err) {
-    if (err instanceof Promise) {
-      await err
-
-      return renderContent(props)
-    }
-
-    throw err
-  }
-}
-
-const createRenderChunk = ({ assetsByChunkName }) => fn => {
-  function renderChunk (chunk, key = '') {
-    if (!chunk) {
-      return null
-    }
-
-    if (typeof chunk === 'string') {
-      return fn(chunk, key)
-    }
-
-    if (Array.isArray(chunk)) {
-      return chunk.map((curr, i) => renderChunk(curr, `${key}-${i}`))
-    }
-
-    return Object.keys(chunk).map(chunkName => renderChunk(chunk[chunkName], chunkName))
-  }
-
-  return renderChunk(assetsByChunkName)
-}
+const app = (
+  <App />
+)
 
 function serverRenderer ({ clientStats, serverStats }) {
   const renderChunks = createRenderChunk(clientStats)
   return async (req, res, next) => {
     try {
-      const content = await renderContent()
+      const content = await renderContent(app)
 
       res.status(200).write('<!doctype html>')
       renderToStaticNodeStream(

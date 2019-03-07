@@ -32,8 +32,6 @@
     "dev": "cross-env WEBPACK_CONFIG=@ninetails-monorepo-react-ssr/webpack-config ssr-scripts dev",
     "lint": "eslint src",
     "start": "cross-env WEBPACK_CONFIG=@ninetails-monorepo-react-ssr/webpack-config ssr-scripts start",
-    "test:jest": "jest",
-    "test:watch": "$npm_execpath run test:jest -- --watch",
     "test": "ssr-scripts test",
     "watch": "$npm_execpath run build:clean && $npm_execpath run build:create:lib && $npm_execpath run build:babel:dev -- -w"
   }

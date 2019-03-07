@@ -5,7 +5,7 @@ const commandLineUsage = require('command-line-usage')
 const jest = require('jest')
 const webpack = require('webpack')
 
-const config = require(process.env.WEBPACK_CONFIG || join(process.cwd(), 'webpack.config.js'))
+const configPath = process.env.WEBPACK_CONFIG || join(process.cwd(), 'webpack.config.js')
 
 const mainDefinitions = [
   {
@@ -72,15 +72,15 @@ require('./loadenv')
 switch (command) {
   case 'dev':
     process.env.NODE_ENV = 'development'
-    require('./server')({ config, stats: getStats(verbose) })
+    require('./server')({ config: require(configPath), stats: getStats(verbose) })
     break
   case 'start':
     process.env.NODE_ENV = 'production'
-    require('./server')({ config, stats: getStats(verbose) })
+    require('./server')({ config: require(configPath), stats: getStats(verbose) })
     break
   case 'build':
     process.env.NODE_ENV = 'production'
-    webpack(config, (err, stats) => {
+    webpack(require(configPath), (err, stats) => {
       if (err) {
         console.error(err.stack || err)
         if (err.details) {
@@ -124,6 +124,7 @@ switch (command) {
     argv.push('-c', join(__dirname, 'jest.config.js'))
     argv.push('--rootDir', process.cwd())
     argv.push('--setupFilesAfterEnv', join(__dirname, 'jest.setup.js'))
+    // argv.push('--showConfig')
     jest.run(argv)
     break
   default:

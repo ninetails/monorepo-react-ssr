@@ -1,3 +1,6 @@
+// regenerator runtime
+require('idempotent-babel-polyfill')
+
 // add some helpful assertions
 require('jest-dom/extend-expect')
 
