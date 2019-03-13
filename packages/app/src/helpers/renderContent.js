@@ -5,13 +5,9 @@ export default async function renderContent (app) {
     return renderToString(app)
   } catch (err) {
     if (err instanceof Promise) {
-      try {
-        await err
+      await err
 
-        return renderContent(app)
-      } catch (rejectedError) {
-        throw rejectedError
-      }
+      return renderContent(app)
     }
 
     throw err
