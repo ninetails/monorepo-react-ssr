@@ -1,8 +1,9 @@
 #!/usr/bin/env node
+const { existsSync } = require('fs')
 const { join } = require('path')
 const commandLineArgs = require('command-line-args')
 const commandLineUsage = require('command-line-usage')
-const jest = require('jest')
+const rimraf = require('rimraf')
 const webpack = require('webpack')
 
 const configPath = process.env.WEBPACK_CONFIG || join(process.cwd(), 'webpack.config.js')
@@ -22,9 +23,14 @@ const mainDefinitions = [
     name: 'verbose',
     alias: 'v',
     type: Boolean
+  },
+  {
+    name: 'clean',
+    alias: 'c',
+    type: Boolean
   }
 ]
-const { _unknown, help, command, verbose } = commandLineArgs(mainDefinitions, { partial: true })
+const { help, clean, command, verbose } = commandLineArgs(mainDefinitions, { partial: true })
 
 if (help) {
   const sections = [
@@ -34,7 +40,7 @@ if (help) {
     },
     {
       header: 'Available commands',
-      content: '{underline dev}, {underline start}, {underline build}'
+      content: '{underline build}, {underline start} (requires build), {underline watch}'
     }
   ]
   const usage = commandLineUsage(sections)
@@ -67,65 +73,60 @@ function getStats (verbose) {
   }
 }
 
+function transpile (cb, showAllStats = false) {
+  webpack(require(configPath), (err, stats) => {
+    if (err) {
+      console.error(err.stack || err)
+      if (err.details) {
+        console.error(err.details)
+      }
+      process.exit(2)
+    }
+
+    const info = stats.toJson()
+
+    if (stats.hasErrors()) {
+      info.errors.forEach(error => console.error(error))
+      process.exit(2)
+    }
+
+    if (stats.hasWarnings()) {
+      info.warnings.forEach(warn => console.warn(warn))
+    }
+
+    console.log(stats.toString(getStats(showAllStats)))
+
+    cb()
+  })
+}
+
+function runServer (showAllStats = false) {
+  require('./server')({ config: require(configPath), stats: getStats(showAllStats) })
+}
+
 require('./loadenv')
 
 switch (command) {
-  case 'dev':
+  case 'watch':
     process.env.NODE_ENV = 'development'
-    require('./server')({ config: require(configPath), stats: getStats(verbose) })
+
+    runServer()
     break
   case 'start':
     process.env.NODE_ENV = 'production'
-    require('./server')({ config: require(configPath), stats: getStats(verbose) })
+
+    if (clean) {
+      rimraf(join(process.cwd(), 'dist'), () => transpile(() => runServer(verbose)))
+    } else if (!existsSync(join(process.cwd(), 'dist', 'server.js'))) {
+      transpile(() => runServer(verbose))
+    } else {
+      runServer(verbose)
+    }
+
     break
   case 'build':
     process.env.NODE_ENV = 'production'
-    webpack(require(configPath), (err, stats) => {
-      if (err) {
-        console.error(err.stack || err)
-        if (err.details) {
-          console.error(err.details)
-        }
-        process.exit(2)
-      }
 
-      const info = stats.toJson()
-
-      if (stats.hasErrors()) {
-        info.errors.forEach(error => console.error(error))
-        process.exit(2)
-      }
-
-      if (stats.hasWarnings()) {
-        info.warnings.forEach(warn => console.warn(warn))
-      }
-
-      console.log(stats.toString({
-        chunks: false,
-        colors: true
-      }))
-    })
-    break
-  case 'test':
-    process.env.BABEL_ENV = 'test'
-    process.env.NODE_ENV = 'test'
-    process.env.PUBLIC_URL = ''
-
-    const argv = [...(_unknown || [])]
-    if (process.env.CI) {
-      argv.push('--silent')
-    }
-    if (
-      !process.env.CI &&
-      argv.indexOf('--coverage') === -1
-    ) {
-      argv.push('--watch')
-    }
-    argv.push('-c', join(__dirname, 'jest.config.js'))
-    argv.push('--rootDir', process.cwd())
-    argv.push('--setupFilesAfterEnv', join(__dirname, 'jest.setup.js'))
-    // argv.push('--showConfig')
-    jest.run(argv)
     break
   default:
     console.error(`Command not found: ${command}`)

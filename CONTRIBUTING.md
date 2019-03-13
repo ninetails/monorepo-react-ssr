@@ -10,13 +10,21 @@ For folder structure, it is based on monorepo using [Lerna](https://lernajs.io/)
 
 For commit standard, it uses [commitlint](https://marionebl.github.io/commitlint/) following [Conventional Commits](https://www.conventionalcommits.org/).
 
-There's some hooks as mentioned before. It was done using [Husky](https://github.com/typicode/husky). Please avoid running commands with `--no-verify`.
+There's some git hooks as mentioned before. It was managed using [Husky](https://github.com/typicode/husky). Please avoid running commands with `--no-verify`.
 
 Also there's an [.editorconfig](https://editorconfig.org/) file to ensure compatibility with most used editors.
 
 It's also recommended to use `prettier-eslint` for autoformatting files on save, depending on your editor.
 
-And for publishing packages, for transpiled ones I will only publish it's transpiled version (on folder `dist`) for minimize package size when used as dependency.
+## Package folder naming
+
+**app** package is currently containing core app for this repo.
+
+For **config**, it holds some configuration for tooling like Babel, eslint and Webpack.
+
+Folders starting with **bin-** contains binary scripts that will be used as internal tools over this monorepo.
+
+For corresponding folder and package name, please run **npx lerna ls -al**.
 
 ### Hooks
 
@@ -26,13 +34,3 @@ And for publishing packages, for transpiled ones I will only publish it's transp
   Finds on every changed package since `develop` for a script named `lint` and runs it in parallel. Bail on first error found.
 - **pre-push**: runs test
   Finds on every changed package since `develop` for a script named `test` and runs it in parallel. Bail on first error found.
-
-### Hygen
-
-This repository uses hygen to automate some tasks
-
-#### **yarn generate:package -- --name &lt;package name&gt; [--prefix &lt;prefix&gt;] [--version &lt;version&gt;]**
-
-> alias: HYGEN_TMPLS=.templates hygen package new --name &lt;package name&gt; [--prefix &lt;prefix&gt;] [--version &lt;version&gt;]
-
-Creates a new package inside packages folder
