@@ -8,35 +8,55 @@ const app = (
   <App />
 )
 
+function expressRenderHtmlShell ({
+  content = '',
+  head,
+  res,
+  renderChunks,
+  root = process.env.REACT_APP_ROOT || 'root'
+}) {
+  res.write('<!doctype html>')
+
+  return renderToStaticNodeStream(
+    <html>
+      <head>
+        {head}
+        {renderChunks((chunk, key) => <link key={key} rel='preload' as='script' href={chunk} />)}
+      </head>
+      <body>
+        <div
+          id={process.env.REACT_APP_ROOT || 'root'}
+          dangerouslySetInnerHTML={{ __html: content }}
+        />
+        {renderChunks((chunk, key) => <script key={key} src={chunk} async />)}
+      </body>
+    </html>
+  )
+    .pipe(res, { end: 'false' })
+}
+
 function serverRenderer ({ clientStats, serverStats }) {
   const renderChunks = createRenderChunk(clientStats)
+  const head = <title>React App</title>
+
   return async (req, res, next) => {
     try {
       const content = await renderContent(app)
 
-      res.status(200).write('<!doctype html>')
-      renderToStaticNodeStream(
-        <html>
-          <head>
-            {renderChunks((chunk, key) => <link key={key} rel='preload' as='script' href={chunk} />)}
-            <title>React App</title>
-          </head>
-          <body>
-            <div
-              id={process.env.REACT_APP_ROOT || 'root'}
-              dangerouslySetInnerHTML={{ __html: content }}
-            />
-            {renderChunks((chunk, key) => <script key={key} src={chunk} async />)}
-          </body>
-        </html>
-      ).pipe(
-        res,
-        { end: 'false' }
-      )
+      return expressRenderHtmlShell({
+        content,
+        head,
+        res: res.status(200),
+        renderChunks
+      })
     } catch (err) {
-      // @todo error page
       console.error(err)
-      res.status(500).send('Server error')
+
+      return expressRenderHtmlShell({
+        head,
+        res: res.status(500),
+        renderChunks
+      })
     }
   }
 }
