@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+const { existsSync } = require('fs')
 const { join } = require('path')
 const commandLineArgs = require('command-line-args')
 const commandLineUsage = require('command-line-usage')
@@ -39,9 +40,38 @@ function run (main, args = []) {
   switch (main) {
     case 'lint':
       const eslintArgv = [...args]
-      eslintArgv.push('-c', join(__dirname, '.eslintrc'))
+      if (!existsSync(join(process.cwd(), '.eslintrc'))) {
+        eslintArgv.push('-c', join(__dirname, '.eslintrc'))
+      }
 
-      return spawn('eslint', eslintArgv, { cwd: process.cwd(), detached: true, stdio: 'inherit' })
+      return spawn('eslint', eslintArgv, { detached: true, stdio: 'inherit' })
+    case 'babel':
+      const babelArgv = [...args]
+
+      if (!process.env.NODE_ENV) {
+        process.env.NODE_ENV = 'development'
+      }
+      console.log(`NODE_ENV=${process.env.NODE_ENV}`)
+
+      ;['test', 'spec', 'stories'].forEach(partial => babelArgv.push('--ignore', `**/*.${partial}.js`))
+
+      if (process.env.BABELRC) {
+        babelArgv.push('--config-file', process.env.BABELRC)
+      } else if (!existsSync(join(process.cwd(), '.babelrc'))) {
+        babelArgv.push('--config-file', join(__dirname, '.babelrc'))
+      }
+
+      switch (process.env.NODE_ENV) {
+        case 'development':
+          babelArgv.push('--source-maps', 'inline')
+          break
+        case 'production':
+          babelArgv.push('-s')
+          break
+        default:
+      }
+
+      return spawn('babel', babelArgv, { detached: true, stdio: 'inherit' })
     case 'test':
       process.env.BABEL_ENV = 'test'
       process.env.NODE_ENV = 'test'

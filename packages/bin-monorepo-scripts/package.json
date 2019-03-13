@@ -19,6 +19,7 @@
     "react-testing-library": "^6.0.0"
   },
   "dependencies": {
+    "@babel/cli": "^7.2.3",
     "@babel/core": "^7.2.2",
     "@ninetails-monorepo-react-ssr/babel-preset-monorepo-react-ssr": "^0.0.0",
     "@ninetails-monorepo-react-ssr/eslint-config-monorepo-react-ssr": "^0.0.0",
