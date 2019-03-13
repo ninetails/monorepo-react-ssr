@@ -19,6 +19,7 @@
     "react-testing-library": "^6.0.0"
   },
   "dependencies": {
+    "@babel/cli": "^7.2.3",
     "@babel/core": "^7.2.2",
     "@ninetails-monorepo-react-ssr/babel-preset-monorepo-react-ssr": "^0.0.0",
     "@ninetails-monorepo-react-ssr/eslint-config-monorepo-react-ssr": "^0.0.0",
@@ -27,6 +28,7 @@
     "command-line-args": "^5.0.2",
     "command-line-usage": "^5.0.5",
     "dotenv": "^6.2.0",
+    "eslint": "^5.15.1",
     "idempotent-babel-polyfill": "^7.0.0",
     "jest": "^24.5.0",
     "jest-dom": "^3.1.3",
@@ -34,6 +36,6 @@
     "jest-silent-reporter": "^0.1.1"
   },
   "scripts": {
-    "lint": "eslint ."
+    "lint": "monorepo-scripts lint ."
   }
 }

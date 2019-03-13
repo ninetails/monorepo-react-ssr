@@ -12,13 +12,9 @@
   },
   "homepage": "https://github.com/ninetails/monorepo-react-ssr/tree/master/packages/app#readme",
   "devDependencies": {
-    "@ninetails-monorepo-react-ssr/babel-preset-monorepo-react-ssr": "^0.0.0",
-    "@ninetails-monorepo-react-ssr/eslint-config-monorepo-react-ssr": "^0.0.0",
     "@ninetails-monorepo-react-ssr/monorepo-scripts": "^0.0.0",
     "@ninetails-monorepo-react-ssr/ssr-express-scripts": "^0.0.0",
     "@ninetails-monorepo-react-ssr/webpack-config": "^0.0.0",
-    "babel-plugin-react-remove-properties": "^0.3.0",
-    "babel-plugin-transform-react-remove-prop-types": "^0.4.23",
     "cross-env": "^5.2.0",
     "prop-types": "^15.7.2",
     "react-testing-library": "^6.0.0"
@@ -31,7 +27,7 @@
   "scripts": {
     "build": "cross-env WEBPACK_CONFIG=@ninetails-monorepo-react-ssr/webpack-config ssr-scripts build",
     "coverage": "$npm_execpath run test -- --coverage",
-    "lint": "eslint src",
+    "lint": "monorepo-scripts lint src",
     "start": "cross-env WEBPACK_CONFIG=@ninetails-monorepo-react-ssr/webpack-config ssr-scripts start",
     "test": "monorepo-scripts test",
     "watch": "cross-env WEBPACK_CONFIG=@ninetails-monorepo-react-ssr/webpack-config ssr-scripts watch"

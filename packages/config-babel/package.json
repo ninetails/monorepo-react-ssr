@@ -12,11 +12,8 @@
   },
   "homepage": "https://github.com/ninetails/monorepo-react-ssr/tree/master/packages/config-babel#readme",
   "main": "index.js",
-  "bin": {
-    "babel": "./babel.js"
-  },
   "devDependencies": {
-    "@ninetails-monorepo-react-ssr/eslint-config-monorepo-react-ssr": "^0.0.0"
+    "@ninetails-monorepo-react-ssr/monorepo-scripts": "^0.0.0"
   },
   "dependencies": {
     "@babel/cli": "^7.2.3",
@@ -44,6 +41,6 @@
     "@babel/preset-react": "^7.0.0"
   },
   "scripts": {
-    "lint": "eslint ."
+    "lint": "monorepo-scripts lint ."
   }
 }

@@ -1,3 +1,4 @@
+const { readFileSync } = require('fs')
 const { join } = require('path')
 const webpack = require('webpack')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
@@ -16,6 +17,8 @@ const devtool = ifDev('inline-module-source-map', 'source-map')
 const clientFilename = ifProd('assets/[name].[contenthash:8].js', 'assets/[name].js')
 
 const customEnvVars = ['ASSET_PATH']
+
+const babelConfig = JSON.parse(readFileSync(process.env.BABELRC || join(__dirname, '.babelrc'), 'utf8'))
 
 module.exports = [
   {
@@ -44,9 +47,7 @@ module.exports = [
           exclude: /node_modules/,
           use: {
             loader: 'babel-loader',
-            options: {
-              presets: ['@babel/preset-env']
-            }
+            options: babelConfig
           }
         }
       ]
@@ -123,9 +124,7 @@ module.exports = [
           exclude: /node_modules/,
           use: {
             loader: 'babel-loader',
-            options: {
-              presets: ['@babel/preset-env']
-            }
+            options: babelConfig
           }
         }
       ]
