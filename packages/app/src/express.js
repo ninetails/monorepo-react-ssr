@@ -1,12 +1,18 @@
 import React from 'react'
 import { renderToStaticNodeStream } from 'react-dom/server'
+import { StaticRouter } from 'react-router-dom'
 import renderContent from './helpers/renderContent'
 import createRenderChunk from './helpers/createRenderChunk'
 import App from './app'
 
-const app = (
-  <App />
-)
+// eslint-disable-next-line react/prop-types
+function createApp ({ location, context }) {
+  return (
+    <StaticRouter location={location} context={context}>
+      <App />
+    </StaticRouter>
+  )
+}
 
 function expressRenderHtmlShell ({
   content = '',
@@ -41,7 +47,16 @@ function serverRenderer ({ clientStats, serverStats }) {
 
   return async (req, res, next) => {
     try {
-      const content = await renderContent(app)
+      const context = {}
+
+      const content = await renderContent(createApp({
+        context,
+        location: req.url
+      }))
+
+      if (context.url) {
+        return res.redirect(301)
+      }
 
       return expressRenderHtmlShell({
         content,
