@@ -90,7 +90,7 @@ module.exports = [
       }
     },
     plugins: [
-      ifDev(new webpack.HotModuleReplacementPlugin(), () => undefined),
+      ifDev(new webpack.HotModuleReplacementPlugin({ multiStep: true }), () => undefined),
       new StatsWriterPlugin({
         filename: 'stats.json'
       }),
@@ -131,7 +131,7 @@ module.exports = [
       ]
     },
     plugins: [
-      ifDev(new webpack.HotModuleReplacementPlugin(), () => undefined),
+      ifDev(new webpack.HotModuleReplacementPlugin({ multiStep: true }), () => undefined),
       definePluginFactory(customEnvVars)
     ]
   }
