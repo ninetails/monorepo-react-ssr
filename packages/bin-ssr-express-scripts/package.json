@@ -21,7 +21,7 @@
     "@ninetails-monorepo-react-ssr/monorepo-scripts": "^0.0.0",
     "command-line-args": "^5.0.2",
     "command-line-usage": "^5.0.5",
-    "dotenv": "^6.2.0",
+    "dotenv": "^7.0.0",
     "express": "^4.16.4",
     "idempotent-babel-polyfill": "^7.0.0",
     "rimraf": "^2.6.3",
