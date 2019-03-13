@@ -21,7 +21,7 @@
   "dependencies": {
     "@babel/core": "^7.2.2",
     "@ninetails-monorepo-react-ssr/babel-preset-monorepo-react-ssr": "^0.0.0",
-    "@ninetails-monorepo-react-ssr/eslint-config-monorepo-react-ssr": "^0.0.0",
+    "@ninetails-monorepo-react-ssr/monorepo-scripts": "^0.0.0",
     "command-line-args": "^5.0.2",
     "command-line-usage": "^5.0.5",
     "dotenv": "^6.2.0",
@@ -37,6 +37,6 @@
     "webpack-hot-server-middleware": "^0.6.0"
   },
   "scripts": {
-    "lint": "eslint ."
+    "lint": "monorepo-scripts lint ."
   }
 }

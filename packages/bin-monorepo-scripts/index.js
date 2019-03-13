@@ -3,6 +3,7 @@ const { join } = require('path')
 const commandLineArgs = require('command-line-args')
 const commandLineUsage = require('command-line-usage')
 const jest = require('jest')
+const { spawn } = require('child_process')
 
 const mainDefinitions = [
   {
@@ -16,7 +17,7 @@ const mainDefinitions = [
     defaultOption: true
   }
 ]
-const { _unknown, help, command } = commandLineArgs(mainDefinitions, { partial: true })
+const { _unknown: mainArgv = [], help, command } = commandLineArgs(mainDefinitions, { stopAtFirstUnknown: true })
 
 if (help) {
   const sections = [
@@ -34,35 +35,42 @@ if (help) {
   process.exit(0)
 }
 
-require('./loadenv')
+function run (main, args = []) {
+  switch (main) {
+    case 'lint':
+      const eslintArgv = [...args]
+      eslintArgv.push('-c', join(__dirname, '.eslintrc'))
 
-switch (command) {
-  case 'test':
-    process.env.BABEL_ENV = 'test'
-    process.env.NODE_ENV = 'test'
-    process.env.PUBLIC_URL = ''
+      return spawn('eslint', eslintArgv, { cwd: process.cwd(), detached: true, stdio: 'inherit' })
+    case 'test':
+      process.env.BABEL_ENV = 'test'
+      process.env.NODE_ENV = 'test'
+      process.env.PUBLIC_URL = ''
+      require('./loadenv')
 
-    const argv = [...(_unknown || [])]
+      const jestArgv = [...args]
 
-    if (process.env.CI) {
-      argv.push('--silent')
-    }
+      if (process.env.CI) {
+        jestArgv.push('--silent')
+      }
 
-    if (
-      !process.env.CI &&
-      argv.indexOf('--coverage') === -1
-    ) {
-      argv.push('--watch')
-    }
+      if (
+        !process.env.CI &&
+        jestArgv.indexOf('--coverage') === -1
+      ) {
+        jestArgv.push('--watch')
+      }
 
-    argv.push('-c', join(__dirname, 'jest.config.js'))
-    argv.push('--rootDir', process.cwd())
-    argv.push('--setupFilesAfterEnv', join(__dirname, 'jest.setup.js'))
-    // argv.push('--showConfig')
+      jestArgv.push('-c', join(__dirname, 'jest.config.js'))
+      jestArgv.push('--rootDir', process.cwd())
+      jestArgv.push('--setupFilesAfterEnv', join(__dirname, 'jest.setup.js'))
+      // jestArgv.push('--showConfig')
 
-    jest.run(argv)
-    break
-  default:
-    console.error(`Command not found: ${command}`)
-    process.exit(1)
+      return jest.run(jestArgv)
+    default:
+      console.error(`Command not found: ${command}`)
+      process.exit(1)
+  }
 }
+
+run(command, mainArgv)

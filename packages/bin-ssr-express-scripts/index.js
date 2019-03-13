@@ -40,7 +40,7 @@ if (help) {
     },
     {
       header: 'Available commands',
-      content: '{underline build}, {underline start} (requires build), {underline watch}'
+      content: '{underline build}, {underline start}, {underline watch}'
     }
   ]
   const usage = commandLineUsage(sections)
@@ -104,31 +104,34 @@ function runServer (showAllStats = false) {
   require('./server')({ config: require(configPath), stats: getStats(showAllStats) })
 }
 
-require('./loadenv')
+function run ({ clean, verbose: showAllStats }) {
+  switch (command) {
+    case 'watch':
+      process.env.NODE_ENV = 'development'
 
-switch (command) {
-  case 'watch':
-    process.env.NODE_ENV = 'development'
+      require('./loadenv')
+      runServer(showAllStats)
+      break
+    case 'start':
+      process.env.NODE_ENV = 'production'
 
-    runServer()
-    break
-  case 'start':
-    process.env.NODE_ENV = 'production'
+      if (clean) {
+        rimraf(join(process.cwd(), 'dist'), () => transpile(() => runServer(showAllStats)))
+      } else if (!existsSync(join(process.cwd(), 'dist', 'server.js'))) {
+        transpile(() => runServer(showAllStats))
+      } else {
+        runServer(showAllStats)
+      }
 
-    if (clean) {
-      rimraf(join(process.cwd(), 'dist'), () => transpile(() => runServer(verbose)))
-    } else if (!existsSync(join(process.cwd(), 'dist', 'server.js'))) {
-      transpile(() => runServer(verbose))
-    } else {
-      runServer(verbose)
-    }
+      break
+    case 'build':
+      process.env.NODE_ENV = 'production'
 
-    break
-  case 'build':
-    process.env.NODE_ENV = 'production'
-
-    break
-  default:
-    console.error(`Command not found: ${command}`)
-    process.exit(1)
+      break
+    default:
+      console.error(`Command not found: ${command}`)
+      process.exit(1)
+  }
 }
+
+run({ clean, verbose })

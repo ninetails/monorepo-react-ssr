@@ -21,7 +21,6 @@
     "@commitlint/cli": "^7.3.2",
     "@commitlint/config-conventional": "^7.3.1",
     "@commitlint/config-lerna-scopes": "^7.3.1",
-    "@ninetails-monorepo-react-ssr/babel-preset-monorepo-react-ssr": "^0.0.0",
     "cross-env": "^5.2.0",
     "cz-conventional-changelog": "^2.1.0",
     "husky": "^1.3.1",
