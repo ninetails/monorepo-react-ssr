@@ -18,6 +18,7 @@
   "dependencies": {
     "@babel/core": "^7.2.2",
     "@ninetails-monorepo-react-ssr/babel-preset-monorepo-react-ssr": "^0.0.0",
+    "@ninetails-monorepo-react-ssr/logger": "^0.0.0",
     "@ninetails-monorepo-react-ssr/monorepo-scripts": "^0.0.0",
     "command-line-args": "^5.0.2",
     "command-line-usage": "^5.0.5",
