@@ -3,12 +3,58 @@ const { join } = require('path')
 const express = require('express')
 const { createServer } = require('spdy')
 const { keygen } = require('tls-keygen')
-const logger = require('@ninetails-monorepo-react-ssr/logger')
-const expressPino = require('@ninetails-monorepo-react-ssr/logger/express')
+const pino = require('@ninetails-monorepo-react-ssr/logger')
+const serverLogger = require('@ninetails-monorepo-react-ssr/logger/express')
+
+const logger = pino.child({ env: process.env.NODE_ENV, server: true })
 
 const app = express()
 
-app.use(expressPino)
+function formatLog (res) {
+  const {
+    statusCode,
+    statusMessage,
+    req: {
+      id,
+      isSpdy,
+      httpVersion,
+      url,
+      originalUrl,
+      baseUrl,
+      params,
+      query,
+      headers,
+      rawHeaders
+    }
+  } = res
+
+  return {
+    statusCode,
+    statusMessage,
+    url,
+    originalUrl,
+    data: {
+      id,
+      httpVersion,
+      isSpdy,
+      baseUrl,
+      params,
+      query,
+      headers,
+      rawHeaders,
+      responseHeaders: res.getHeaders
+    }
+  }
+}
+
+app.use(serverLogger({ logger }))
+app.use((req, res, next) => {
+  res.on('finish', () => logger.info(formatLog(res), 'request done'))
+  res.on('close', () => logger.info(formatLog(res), 'request closed'))
+  res.on('error', () => logger.error(formatLog(res), 'request error'))
+
+  next()
+})
 
 const PORT = process.env.PORT || 3000
 

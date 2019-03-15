@@ -32,6 +32,6 @@
     "lint": "monorepo-scripts lint src",
     "start": "cross-env WEBPACK_CONFIG=@ninetails-monorepo-react-ssr/webpack-config ssr-scripts start",
     "test": "monorepo-scripts test",
-    "watch": "cross-env WEBPACK_CONFIG=@ninetails-monorepo-react-ssr/webpack-config ssr-scripts watch | pino-pretty -c -l"
+    "watch": "cross-env WEBPACK_CONFIG=@ninetails-monorepo-react-ssr/webpack-config ssr-scripts watch | pino-pretty -c -l --translateTime"
   }
 }
