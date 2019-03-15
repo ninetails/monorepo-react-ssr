@@ -4,13 +4,14 @@ const express = require('express')
 const { createServer } = require('spdy')
 const { keygen } = require('tls-keygen')
 const pino = require('@ninetails-monorepo-react-ssr/logger')
-const serverLogger = require('@ninetails-monorepo-react-ssr/logger/express')
+const loggerMiddleware = require('@ninetails-monorepo-react-ssr/logger/express/logger')
+const loggerRequestMiddleware = require('@ninetails-monorepo-react-ssr/logger/express/middleware')
 
 const logger = pino.child({ env: process.env.NODE_ENV, server: true })
 
 const app = express()
 
-function formatLog (res) {
+function format (res, duration) {
   const {
     statusCode,
     statusMessage,
@@ -33,6 +34,7 @@ function formatLog (res) {
     statusMessage,
     url,
     originalUrl,
+    duration,
     data: {
       id,
       httpVersion,
@@ -47,16 +49,14 @@ function formatLog (res) {
   }
 }
 
-app.use(serverLogger({ logger }))
-app.use((req, res, next) => {
-  res.on('finish', () => logger.info(formatLog(res), 'request done'))
-  res.on('close', () => logger.info(formatLog(res), 'request closed'))
-  res.on('error', () => logger.error(formatLog(res), 'request error'))
-
-  next()
-})
+app.use(loggerMiddleware({ logger }))
+if (!process.env.SKIP_REQUEST_LOG) {
+  app.use(loggerRequestMiddleware(format))
+}
 
 const PORT = process.env.PORT || 3000
+
+const noop = () => undefined
 
 module.exports = function run ({ config, stats }) {
   if (process.env.NODE_ENV !== 'production') {
@@ -69,7 +69,7 @@ module.exports = function run ({ config, stats }) {
     app.use(express.static(join(process.cwd(), 'public')))
     app.use(
       webpackDevMiddleware(compiler, {
-        logger,
+        logger: process.env.SKIP_WEBPACK_LOG ? { info: noop } : logger,
         serverSideRender: true,
         noInfo: true,
         stats
@@ -79,7 +79,7 @@ module.exports = function run ({ config, stats }) {
       webpackHotMiddleware(
         compiler.compilers.find(compiler => compiler.name === 'client'),
         {
-          log: logger.info.bind(logger)
+          log: process.env.SKIP_WEBPACK_LOG ? noop : logger.info.bind(logger)
         }
       )
     )
