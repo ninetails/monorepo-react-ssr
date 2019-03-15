@@ -30,9 +30,7 @@
     "build": "cross-env WEBPACK_CONFIG=@ninetails-monorepo-react-ssr/webpack-config ssr-scripts build",
     "coverage": "$npm_execpath run test -- --coverage",
     "lint": "monorepo-scripts lint src",
-    "start": "$npm_execpath run start:standalone | pino-pretty -c -l",
-    "start:clean": "$npm_execpath run start:standalone --clean | pino-pretty -c -l",
-    "start:standalone": "cross-env WEBPACK_CONFIG=@ninetails-monorepo-react-ssr/webpack-config ssr-scripts start",
+    "start": "cross-env WEBPACK_CONFIG=@ninetails-monorepo-react-ssr/webpack-config ssr-scripts start",
     "test": "monorepo-scripts test",
     "watch": "cross-env WEBPACK_CONFIG=@ninetails-monorepo-react-ssr/webpack-config ssr-scripts watch | pino-pretty -c -l"
   }
