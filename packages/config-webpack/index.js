@@ -25,7 +25,7 @@ module.exports = [
     name: 'client',
     target: 'web',
     entry:
-      ifDev(['webpack-hot-middleware/client?name=client'], [])
+      ifDev(['webpack-hot-middleware/client?name=client&reload=true'], [])
         .concat([
           'idempotent-babel-polyfill',
           join(process.cwd(), 'src', 'client.js')
@@ -130,7 +130,7 @@ module.exports = [
       ]
     },
     plugins: [
-      ifDev(new webpack.HotModuleReplacementPlugin({ multiStep: true }), () => undefined),
+      ifDev(new webpack.HotModuleReplacementPlugin(), () => undefined),
       definePluginFactory(customEnvVars)
     ]
   }
