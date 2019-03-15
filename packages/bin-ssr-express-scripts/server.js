@@ -3,8 +3,12 @@ const { join } = require('path')
 const express = require('express')
 const { createServer } = require('spdy')
 const { keygen } = require('tls-keygen')
+const logger = require('@ninetails-monorepo-react-ssr/logger')
+const expressPino = require('@ninetails-monorepo-react-ssr/logger/express')
 
 const app = express()
+
+app.use(expressPino)
 
 const PORT = process.env.PORT || 3000
 
@@ -19,6 +23,7 @@ module.exports = function run ({ config, stats }) {
     app.use(express.static(join(process.cwd(), 'public')))
     app.use(
       webpackDevMiddleware(compiler, {
+        logger,
         serverSideRender: true,
         noInfo: true,
         stats
@@ -26,7 +31,10 @@ module.exports = function run ({ config, stats }) {
     )
     app.use(
       webpackHotMiddleware(
-        compiler.compilers.find(compiler => compiler.name === 'client')
+        compiler.compilers.find(compiler => compiler.name === 'client'),
+        {
+          log: logger.info.bind(logger)
+        }
       )
     )
     app.use(webpackHotServerMiddleware(compiler))
@@ -34,7 +42,7 @@ module.exports = function run ({ config, stats }) {
     const CLIENT_ASSETS_DIR = join(process.cwd(), './dist/client')
     const CLIENT_STATS_PATH = join(CLIENT_ASSETS_DIR, 'stats.json')
     const SERVER_RENDERER_PATH = join(process.cwd(), './dist/server.js')
-    const serverRenderer = require(SERVER_RENDERER_PATH).default
+    const { default: serverRenderer } = require(SERVER_RENDERER_PATH)
     const clientStats = require(CLIENT_STATS_PATH)
 
     app.use(express.static(CLIENT_ASSETS_DIR))
@@ -69,7 +77,7 @@ module.exports = function run ({ config, stats }) {
       cert: readFileSync(cert)
     }))
     .then(promisifiedCreateServer(app, PORT))
-    .then(() => console.log(`Server started: https://localhost:${PORT}/`))
+    .then(() => logger.info(`Server started: https://localhost:${PORT}/`))
     .catch(error => {
       console.error(error)
       return process.exit(1)

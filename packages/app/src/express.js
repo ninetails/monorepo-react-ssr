@@ -41,38 +41,43 @@ function expressRenderHtmlShell ({
     .pipe(res, { end: 'false' })
 }
 
-function serverRenderer ({ clientStats, serverStats }) {
-  const renderChunks = createRenderChunk(clientStats)
+async function render ({ req, res, renderChunks }) {
   const head = <title>React App</title>
 
-  return async (req, res, next) => {
-    try {
-      const context = {}
+  try {
+    const context = {}
 
-      const content = await renderContent(createApp({
-        context,
-        location: req.url
-      }))
+    const content = await renderContent(createApp({
+      context,
+      location: req.url
+    }))
 
-      if (context.url) {
-        return res.redirect(301)
-      }
-
-      return expressRenderHtmlShell({
-        content,
-        head,
-        res: res.status(200),
-        renderChunks
-      })
-    } catch (err) {
-      console.error(err)
-
-      return expressRenderHtmlShell({
-        head,
-        res: res.status(500),
-        renderChunks
-      })
+    if (context.url) {
+      return res.redirect(301)
     }
+
+    return expressRenderHtmlShell({
+      content,
+      head,
+      res: res.status(200),
+      renderChunks
+    })
+  } catch (err) {
+    console.error(err)
+
+    return expressRenderHtmlShell({
+      head,
+      res: res.status(500),
+      renderChunks
+    })
+  }
+}
+
+function serverRenderer ({ clientStats, serverStats }) {
+  const renderChunks = createRenderChunk(clientStats)
+
+  return (req, res) => {
+    return render({ req, res, renderChunks })
   }
 }
 

@@ -51,6 +51,25 @@ describe('helpers/createRenderChunk', () => {
       expect(mockFn).toHaveBeenNthCalledWith(2, mockChunkTwo, 1)
     })
 
+    it('should ignore .map files when provided with two string chunks on array', () => {
+      const mockChunkFile = 'mock chunk 1'
+      const mockChunkMap = 'mockchunk.map'
+      const mockStats = {
+        assetsByChunkName: [
+          mockChunkFile,
+          mockChunkMap
+        ]
+      }
+      const mockReturnOne = 'foo1'
+      const mockReturnTwo = 'foo2'
+      const mockFn = jest.fn(arg => arg === mockChunkFile ? mockReturnOne : mockReturnTwo)
+
+      const renderChunk = createRenderChunk(mockStats)
+      expect(renderChunk(mockFn)).toEqual([mockReturnOne])
+      expect(mockFn).toHaveBeenCalledTimes(1)
+      expect(mockFn).toHaveBeenNthCalledWith(1, mockChunkFile, 0)
+    })
+
     it('should be called with a simple object', () => {
       const mockChunk = 'mock chunk'
       const mockChunkName = 'mockmain'

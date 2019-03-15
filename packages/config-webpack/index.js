@@ -25,7 +25,7 @@ module.exports = [
     name: 'client',
     target: 'web',
     entry:
-      ifDev(['webpack-hot-middleware/client?name=client&reload=true'], [])
+      ifDev(['webpack-hot-middleware/client?name=client'], [])
         .concat([
           'idempotent-babel-polyfill',
           join(process.cwd(), 'src', 'client.js')

@@ -9,7 +9,9 @@ const createRenderChunk = ({ assetsByChunkName } = {}) => fn => {
     }
 
     if (Array.isArray(chunk)) {
-      return chunk.map((curr, i) => renderChunk(curr, key ? `${key}-${i}` : i))
+      return chunk
+        .filter(path => !/\.map$/.test(path))
+        .map((curr, i) => renderChunk(curr, key ? `${key}-${i}` : i))
     }
 
     const objectChunksArray = Object.keys(chunk)
