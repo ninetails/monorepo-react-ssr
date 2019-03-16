@@ -1,8 +1,10 @@
-const { readFileSync } = require('fs')
+const { existsSync, readFileSync } = require('fs')
 const { join } = require('path')
 const webpack = require('webpack')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const { StatsWriterPlugin } = require('webpack-stats-plugin')
+const { InjectManifest } = require('workbox-webpack-plugin')
+const WebpackPwaManifest = require('webpack-pwa-manifest')
 const definePluginFactory = require('./helpers/definePluginFactory')
 
 const mode = process.env.NODE_ENV || 'development'
@@ -19,6 +21,8 @@ const clientFilename = ifProd('assets/[name].[contenthash:8].js', 'assets/[name]
 const customEnvVars = ['ASSET_PATH']
 
 const babelConfig = JSON.parse(readFileSync(process.env.BABELRC || join(__dirname, '.babelrc'), 'utf8'))
+
+const manifest = existsSync(join(process.cwd(), 'manifest.js')) ? require(join(process.cwd(), 'manifest.js')) : undefined
 
 module.exports = [
   {
@@ -92,10 +96,20 @@ module.exports = [
     },
     plugins: [
       ifDev(new webpack.HotModuleReplacementPlugin({ multiStep: true }), () => undefined),
+      definePluginFactory(customEnvVars),
+      !manifest
+        ? () => undefined
+        : new WebpackPwaManifest({
+          inject: false,
+          filename: 'manifest.json',
+          ...manifest
+        }),
       new StatsWriterPlugin({
         filename: 'stats.json'
       }),
-      definePluginFactory(customEnvVars)
+      new InjectManifest({
+        swSrc: join(process.cwd(), 'src', 'sw.js')
+      })
     ]
   },
   {

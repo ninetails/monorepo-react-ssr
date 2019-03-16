@@ -27,10 +27,16 @@ const mainDefinitions = [
   {
     name: 'clean',
     alias: 'c',
-    type: Boolean
+    type: Boolean,
+    description: 'performs a clean start, rebuilding application'
+  },
+  {
+    name: 'dev',
+    type: Boolean,
+    description: 'load .env file (for start command)'
   }
 ]
-const { help, clean, command, verbose } = commandLineArgs(mainDefinitions, { partial: true })
+const { help, clean, command, dev, verbose } = commandLineArgs(mainDefinitions, { partial: true })
 
 if (help) {
   const sections = [
@@ -73,7 +79,7 @@ function getStats (verbose) {
   }
 }
 
-function transpile (cb, showAllStats = false) {
+function transpile (cb = () => undefined, showAllStats = false) {
   webpack(require(configPath), (err, stats) => {
     if (err) {
       console.error(err.stack || err)
@@ -104,7 +110,7 @@ function runServer (showAllStats = false) {
   require('./server')({ config: require(configPath), stats: getStats(showAllStats) })
 }
 
-function run ({ clean, verbose: showAllStats }) {
+function run ({ clean, dev: loadEnvs, verbose: showAllStats }) {
   switch (command) {
     case 'watch':
       process.env.NODE_ENV = 'development'
@@ -115,10 +121,14 @@ function run ({ clean, verbose: showAllStats }) {
     case 'start':
       process.env.NODE_ENV = 'production'
 
+      if (loadEnvs) {
+        require('./loadenv')
+      }
+
       if (clean) {
-        rimraf(join(process.cwd(), 'dist'), () => transpile(() => runServer(showAllStats)))
+        rimraf(join(process.cwd(), 'dist'), () => transpile(() => runServer(showAllStats), showAllStats))
       } else if (!existsSync(join(process.cwd(), 'dist', 'server.js'))) {
-        transpile(() => runServer(showAllStats))
+        transpile(() => runServer(showAllStats), showAllStats)
       } else {
         runServer(showAllStats)
       }
@@ -126,6 +136,7 @@ function run ({ clean, verbose: showAllStats }) {
       break
     case 'build':
       process.env.NODE_ENV = 'production'
+      transpile(() => undefined, showAllStats)
 
       break
     default:
@@ -134,4 +145,4 @@ function run ({ clean, verbose: showAllStats }) {
   }
 }
 
-run({ clean, verbose })
+run({ clean, dev, verbose })

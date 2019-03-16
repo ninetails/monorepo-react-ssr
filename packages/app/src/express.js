@@ -21,11 +21,13 @@ function expressRenderHtmlShell ({
   renderChunks,
   root = process.env.REACT_APP_ROOT || 'root'
 }) {
+  res.setHeader('Content-Type', 'text/html')
   res.write('<!doctype html>')
 
   return renderToStaticNodeStream(
     <html>
       <head>
+        <link rel='manifest' href='/manifest.json' />
         {head}
         {renderChunks((chunk, key) => <link key={key} rel='preload' as='script' href={chunk} />)}
       </head>
@@ -59,7 +61,7 @@ async function render ({ req, res, renderChunks }) {
     return expressRenderHtmlShell({
       content,
       head,
-      res: res.status(200),
+      res: res.status(context.status || 200),
       renderChunks
     })
   } catch (err) {
