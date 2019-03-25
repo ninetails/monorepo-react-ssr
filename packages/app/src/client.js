@@ -17,4 +17,6 @@ function init (root = getRoot(process.env.REACT_APP_ROOT)) {
 
 init()
 
-registerServiceWorker()
+if (location.protocol === 'https:') {
+  registerServiceWorker()
+}

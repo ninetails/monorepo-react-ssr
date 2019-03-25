@@ -4,7 +4,7 @@
     "production": {
       "plugins": [
         ["react-remove-properties", { "properties": ["data-testid"] }],
-        "transform-react-remove-prop-types"
+        ["transform-react-remove-prop-types", { "removeImport": true }]
       ]
     },
     "test": {

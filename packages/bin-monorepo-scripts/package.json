@@ -2,38 +2,31 @@
   "name": "@ninetails-monorepo-react-ssr/monorepo-scripts",
   "version": "0.0.0",
   "private": true,
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ninetails/monorepo-react-ssr.git"
-  },
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/ninetails/monorepo-react-ssr/issues"
-  },
-  "homepage": "https://github.com/ninetails/monorepo-react-ssr/tree/master/packages/bin-monorepo-scripts#readme",
   "main": "./index.js",
   "bin": {
     "monorepo-scripts": "./index.js"
   },
   "dependencies": {
     "@babel/cli": "^7.2.3",
-    "@babel/core": "^7.2.2",
+    "@babel/core": "^7.4.0",
+    "@babel/polyfill": "^7.4.0",
     "@ninetails-monorepo-react-ssr/babel-preset-monorepo-react-ssr": "^0.0.0",
     "@ninetails-monorepo-react-ssr/eslint-config-monorepo-react-ssr": "^0.0.0",
     "babel-core": "^7.0.0-bridge.0",
     "babel-jest": "^24.5.0",
-    "command-line-args": "^5.0.2",
+    "command-line-args": "^5.1.0",
     "command-line-usage": "^5.0.5",
     "dotenv": "^7.0.0",
-    "eslint": "^5.15.1",
-    "idempotent-babel-polyfill": "^7.0.0",
+    "eslint": "^5.15.3",
     "jest": "^24.5.0",
     "jest-dom": "^3.1.3",
     "jest-environment-jsdom": "^24.5.0",
     "jest-haste-map": "^24.5.0",
     "jest-resolve": "^24.5.0",
     "jest-silent-reporter": "^0.1.1",
-    "react-testing-library": "^6.0.0"
+    "react-dom": "^16.8.5",
+    "react-testing-library": "^6.0.2"
   },
   "scripts": {
     "lint": "monorepo-scripts lint ."

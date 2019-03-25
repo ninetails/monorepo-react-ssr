@@ -21,3 +21,9 @@ Contains all application, made in React. Please use following files for entrypoi
   Runs `jest`.
 - **watch**
   Will build and watch for changes inside `src`.
+
+## Problems
+
+### It will not log requests when using HTTPS
+
+[See node-spdy#327]

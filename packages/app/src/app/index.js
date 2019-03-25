@@ -1,6 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { hot } from 'react-hot-loader/root'
 import { Link, Route, Switch } from 'react-router-dom'
+import './config/hot-loader'
 
 function Home () {
   return <h1>Home</h1>
@@ -53,4 +55,4 @@ function App () {
   )
 }
 
-export default App
+export default hot(App)

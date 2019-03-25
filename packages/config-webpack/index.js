@@ -1,11 +1,12 @@
 const { existsSync, readFileSync } = require('fs')
 const { join } = require('path')
 const webpack = require('webpack')
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const TerserPlugin = require('terser-webpack-plugin')
 const { StatsWriterPlugin } = require('webpack-stats-plugin')
 const { InjectManifest } = require('workbox-webpack-plugin')
 const WebpackPwaManifest = require('webpack-pwa-manifest')
 const definePluginFactory = require('./helpers/definePluginFactory')
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 
 const mode = process.env.NODE_ENV || 'development'
 const isProd = mode === 'production'
@@ -29,9 +30,8 @@ module.exports = [
     name: 'client',
     target: 'web',
     entry:
-      ifDev(['webpack-hot-middleware/client?name=client&reload=true'], [])
+      ifDev(['webpack-hot-middleware/client?name=client&reload=true', 'react-hot-loader/patch'], [])
         .concat([
-          'idempotent-babel-polyfill',
           join(process.cwd(), 'src', 'client.js')
         ]),
     output: {
@@ -48,7 +48,7 @@ module.exports = [
       rules: [
         {
           test: /\.m?js$/,
-          exclude: /node_modules/,
+          include: join(process.cwd(), 'src'),
           use: {
             loader: 'babel-loader',
             options: babelConfig
@@ -56,13 +56,21 @@ module.exports = [
         }
       ]
     },
+    resolve: {
+      alias: {
+        'react-dom': '@hot-loader/react-dom'
+      }
+    },
     optimization: {
       minimizer:
         ifProd(
           [
-            new UglifyJsPlugin({
+            new TerserPlugin({
+              cache: false,
+              parallel: true,
               sourceMap: true,
-              uglifyOptions: {
+              extractComments: 'all',
+              terserOptions: {
                 output: {
                   comments: false
                 }
@@ -73,23 +81,26 @@ module.exports = [
         ),
       splitChunks: {
         cacheGroups: {
-          vendor: {
-            test: /node_modules\/(?!react|core-js)/,
-            chunks: 'initial',
-            name: 'vendor',
-            enforce: true
-          },
           react: {
-            test: /node_modules\/react/,
+            test: /node_modules\/([^/]+\/)?react(-helmet)?(-router)?(-dom)?\//,
             chunks: 'initial',
             name: 'react',
-            enforce: true
+            enforce: true,
+            priority: 3
           },
           corejs: {
             test: /node_modules\/core-js/,
             chunks: 'initial',
             name: 'corejs',
-            enforce: true
+            enforce: true,
+            priority: 2
+          },
+          vendor: {
+            test: /node_modules/,
+            chunks: 'initial',
+            name: 'vendors',
+            enforce: true,
+            priority: 1
           }
         }
       }
@@ -108,17 +119,18 @@ module.exports = [
         filename: 'stats.json'
       }),
       new InjectManifest({
-        swSrc: join(process.cwd(), 'src', 'sw.js')
-      })
+        swSrc: join(process.cwd(), 'src', 'sw.js'),
+        exclude: [/\.map$/]
+      }),
+      process.env.WEBPACK_BUNDLE_ANALYZE ? new BundleAnalyzerPlugin() : () => undefined
     ]
   },
   {
     name: 'server',
     target: 'node',
     entry:
-      ifDev(['webpack-hot-middleware/client?name=server'], [])
+      ifDev(['webpack-hot-middleware/client?name=server', 'react-hot-loader/patch'], [])
         .concat([
-          'idempotent-babel-polyfill',
           join(process.cwd(), 'src', 'express.js')
         ]),
     output: {
@@ -135,13 +147,18 @@ module.exports = [
       rules: [
         {
           test: /\.m?js$/,
-          exclude: /node_modules/,
+          include: join(process.cwd(), 'src'),
           use: {
             loader: 'babel-loader',
             options: babelConfig
           }
         }
       ]
+    },
+    resolve: {
+      alias: {
+        'react-dom': '@hot-loader/react-dom'
+      }
     },
     plugins: [
       ifDev(new webpack.HotModuleReplacementPlugin(), () => undefined),

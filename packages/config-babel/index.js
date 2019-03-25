@@ -3,20 +3,27 @@ module.exports = () => ({
     [
       '@babel/preset-env',
       {
-        useBuiltIns: 'entry',
+        useBuiltIns: 'usage',
+        corejs: 2,
         targets: {
           node: 'current',
-          browsers: ['>0.2%', 'not dead', 'not ie <= 11', 'not op_mini all']
+          browsers: ['>0.5%', 'not dead', 'not ie > 0', 'not op_mini all']
         }
       }
     ],
     '@babel/preset-react'
   ],
   plugins: [
+    // macros
+    'macros',
+
     // React
     '@babel/plugin-transform-react-display-name',
     '@babel/plugin-transform-react-inline-elements',
     '@babel/plugin-transform-react-constant-elements',
+
+    // React Hot Loader
+    'react-hot-loader/babel',
 
     // Stage 0
     '@babel/plugin-proposal-function-bind',

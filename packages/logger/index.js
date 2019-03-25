@@ -6,5 +6,5 @@ const ifDev = (left, right) =>
     : right
 
 module.exports = pino({
-  level: ifDev('trace', 'warn')
+  level: ifDev('trace', 'info')
 })

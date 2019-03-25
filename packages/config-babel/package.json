@@ -2,21 +2,13 @@
   "name": "@ninetails-monorepo-react-ssr/babel-preset-monorepo-react-ssr",
   "version": "0.0.0",
   "private": true,
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ninetails/monorepo-react-ssr.git"
-  },
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/ninetails/monorepo-react-ssr/issues"
-  },
-  "homepage": "https://github.com/ninetails/monorepo-react-ssr/tree/master/packages/config-babel#readme",
   "main": "index.js",
   "dependencies": {
     "@babel/cli": "^7.2.3",
-    "@babel/core": "^7.2.2",
-    "@babel/plugin-proposal-class-properties": "^7.3.0",
-    "@babel/plugin-proposal-decorators": "^7.3.0",
+    "@babel/core": "^7.4.0",
+    "@babel/plugin-proposal-class-properties": "^7.4.0",
+    "@babel/plugin-proposal-decorators": "^7.4.0",
     "@babel/plugin-proposal-do-expressions": "^7.2.0",
     "@babel/plugin-proposal-export-default-from": "^7.2.0",
     "@babel/plugin-proposal-export-namespace-from": "^7.2.0",
@@ -34,7 +26,9 @@
     "@babel/plugin-transform-react-constant-elements": "^7.2.0",
     "@babel/plugin-transform-react-display-name": "^7.2.0",
     "@babel/plugin-transform-react-inline-elements": "^7.2.0",
-    "@babel/preset-env": "^7.3.1",
-    "@babel/preset-react": "^7.0.0"
+    "@babel/preset-env": "^7.4.2",
+    "@babel/preset-react": "^7.0.0",
+    "babel-plugin-macros": "^2.5.0",
+    "react-hot-loader": "^4.8.0"
   }
 }

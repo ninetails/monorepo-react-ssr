@@ -46,7 +46,7 @@ if (help) {
     },
     {
       header: 'Available commands',
-      content: '{underline build}, {underline start}, {underline watch}'
+      content: '{underline analyze}, {underline build}, {underline start}, {underline watch}'
     }
   ]
   const usage = commandLineUsage(sections)
@@ -134,6 +134,9 @@ function run ({ clean, dev: loadEnvs, verbose: showAllStats }) {
       }
 
       break
+    case 'analyze':
+      process.env.WEBPACK_BUNDLE_ANALYZE = true
+    // eslint-disable-next-line no-fallthrough
     case 'build':
       process.env.NODE_ENV = 'production'
       transpile(() => undefined, showAllStats)

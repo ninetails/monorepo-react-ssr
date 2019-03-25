@@ -1,64 +1,35 @@
 const { readFileSync } = require('fs')
 const { join } = require('path')
 const express = require('express')
-const { createServer } = require('spdy')
+const { createServer: createServerHttp } = require('http')
+const { createServer: createServerHttps } = require('spdy')
 const { keygen } = require('tls-keygen')
 const pino = require('@ninetails-monorepo-react-ssr/logger')
-const loggerMiddleware = require('@ninetails-monorepo-react-ssr/logger/express/logger')
-const loggerRequestMiddleware = require('@ninetails-monorepo-react-ssr/logger/express/middleware')
+const loggerMiddleware = require('@ninetails-monorepo-react-ssr/logger/express/middleware')
 
 const logger = pino.child({ env: process.env.NODE_ENV, server: true })
 
-const app = express()
-
-function format (res, duration) {
-  const {
-    statusCode,
-    statusMessage,
-    req: {
-      id,
-      isSpdy,
-      httpVersion,
-      url,
-      originalUrl,
-      baseUrl,
-      params,
-      query,
-      headers,
-      rawHeaders
-    }
-  } = res
-
-  return {
-    statusCode,
-    statusMessage,
-    url,
-    originalUrl,
-    duration,
-    data: {
-      id,
-      httpVersion,
-      isSpdy,
-      baseUrl,
-      params,
-      query,
-      headers,
-      rawHeaders,
-      responseHeaders: res.getHeaders
-    }
-  }
-}
-
-app.use(loggerMiddleware({ logger }))
-if (!process.env.SKIP_REQUEST_LOG) {
-  app.use(loggerRequestMiddleware(format))
-}
-
-const PORT = process.env.PORT || 3000
+const APP_PORT = process.env.APP_PORT || 3000
 
 const noop = () => undefined
 
-module.exports = function run ({ config, stats }) {
+const promisifiedCreateServer = (server, port, createServer) => opts => {
+  return new Promise((resolve, reject) => {
+    return createServer(opts, server).listen(port, error => {
+      if (error) {
+        reject(error)
+      }
+
+      resolve()
+    })
+  })
+}
+
+module.exports = function run ({ app = express(), config, stats }) {
+  if (!process.env.APP_SKIP_REQUEST_LOG) {
+    app.use(loggerMiddleware({ logger }))
+  }
+
   if (process.env.NODE_ENV !== 'production') {
     const webpack = require('webpack')
     const webpackDevMiddleware = require('webpack-dev-middleware')
@@ -69,7 +40,7 @@ module.exports = function run ({ config, stats }) {
     app.use(express.static(join(process.cwd(), 'public')))
     app.use(
       webpackDevMiddleware(compiler, {
-        logger: process.env.SKIP_WEBPACK_LOG ? { info: noop } : logger,
+        logger: process.env.APP_SKIP_WEBPACK_LOG ? { info: noop } : logger,
         serverSideRender: true,
         noInfo: true,
         stats
@@ -79,7 +50,7 @@ module.exports = function run ({ config, stats }) {
       webpackHotMiddleware(
         compiler.compilers.find(compiler => compiler.name === 'client'),
         {
-          log: process.env.SKIP_WEBPACK_LOG ? noop : logger.info.bind(logger)
+          log: process.env.APP_SKIP_WEBPACK_LOG ? noop : logger.info.bind(logger)
         }
       )
     )
@@ -93,18 +64,6 @@ module.exports = function run ({ config, stats }) {
 
     app.use(express.static(CLIENT_ASSETS_DIR))
     app.use(serverRenderer({ clientStats }))
-  }
-
-  const promisifiedCreateServer = (server, port) => opts => {
-    return new Promise((resolve, reject) => {
-      return createServer(opts, server).listen(port, error => {
-        if (error) {
-          reject(error)
-        }
-
-        resolve()
-      })
-    })
   }
 
   return Promise.resolve({ key: process.env.KEY, cert: process.env.CERT })
@@ -122,8 +81,12 @@ module.exports = function run ({ config, stats }) {
       key: readFileSync(key),
       cert: readFileSync(cert)
     }))
-    .then(promisifiedCreateServer(app, PORT))
-    .then(() => logger.info(`Server started: https://localhost:${PORT}/`))
+    .then(promisifiedCreateServer(app, APP_PORT, process.env.APP_USE_HTTPS ? createServerHttps : createServerHttp))
+    .then(() => logger.info({
+      APP_USE_HTTPS: process.env.APP_USE_HTTPS,
+      APP_SKIP_WEBPACK_LOG: process.env.APP_SKIP_WEBPACK_LOG,
+      APP_SKIP_REQUEST_LOG: process.env.APP_SKIP_REQUEST_LOG
+    }, `Server started: ${process.env.APP_USE_HTTPS ? 'https' : 'http'}://localhost:${APP_PORT}/`))
     .catch(error => {
       console.error(error)
       return process.exit(1)

@@ -2,30 +2,24 @@
   "name": "@ninetails-monorepo-react-ssr/webpack-config",
   "version": "0.0.0",
   "private": true,
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ninetails/monorepo-react-ssr.git"
-  },
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/ninetails/monorepo-react-ssr/issues"
-  },
-  "homepage": "https://github.com/ninetails/monorepo-react-ssr/tree/master/packages/config-webpack#readme",
   "main": "index.js",
   "devDependencies": {
     "@ninetails-monorepo-react-ssr/monorepo-scripts": "^0.0.0"
   },
   "dependencies": {
-    "@babel/core": "^7.2.2",
+    "@babel/core": "^7.4.0",
     "@ninetails-monorepo-react-ssr/babel-preset-monorepo-react-ssr": "^0.0.0",
     "babel-loader": "^8.0.5",
     "babel-plugin-react-remove-properties": "^0.3.0",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.23",
-    "uglifyjs-webpack-plugin": "^2.1.1",
+    "react-hot-loader": "^4.8.0",
+    "terser-webpack-plugin": "^1.2.3",
     "webpack": "^4.29.0",
+    "webpack-bundle-analyzer": "^3.1.0",
     "webpack-pwa-manifest": "^4.0.0",
     "webpack-stats-plugin": "^0.2.1",
-    "workbox-webpack-plugin": "^4.1.0"
+    "workbox-webpack-plugin": "^4.1.1"
   },
   "scripts": {
     "lint": "monorepo-scripts lint ."

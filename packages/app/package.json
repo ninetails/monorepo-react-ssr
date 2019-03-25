@@ -2,15 +2,7 @@
   "name": "@ninetails-monorepo-react-ssr/app",
   "version": "0.0.0",
   "private": true,
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ninetails/monorepo-react-ssr.git"
-  },
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/ninetails/monorepo-react-ssr/issues"
-  },
-  "homepage": "https://github.com/ninetails/monorepo-react-ssr/tree/master/packages/app#readme",
   "devDependencies": {
     "@ninetails-monorepo-react-ssr/babel-preset-monorepo-react-ssr": "^0.0.0",
     "@ninetails-monorepo-react-ssr/monorepo-scripts": "^0.0.0",
@@ -19,16 +11,20 @@
     "cross-env": "^5.2.0",
     "pino-pretty": "^2.5.0",
     "prop-types": "^15.7.2",
-    "react-testing-library": "^6.0.0"
+    "react-testing-library": "^6.0.2"
   },
   "dependencies": {
+    "@hot-loader/react-dom": "^16.8.4",
     "@ninetails-monorepo-react-ssr/logger": "^0.0.0",
-    "react": "^16.8.4",
-    "react-dom": "^16.8.4",
-    "react-router-dom": "^4.3.1"
+    "react": "^16.8.5",
+    "react-dom": "^16.8.5",
+    "react-hot-loader": "^4.8.0",
+    "react-router-dom": "^5.0.0"
   },
   "scripts": {
+    "analyze": "cross-env WEBPACK_CONFIG=@ninetails-monorepo-react-ssr/webpack-config ssr-scripts analyze",
     "build": "cross-env WEBPACK_CONFIG=@ninetails-monorepo-react-ssr/webpack-config ssr-scripts build",
+    "clean": "rm -rf coverage dist",
     "coverage": "$npm_execpath run test -- --coverage",
     "lint": "monorepo-scripts lint src",
     "start": "cross-env WEBPACK_CONFIG=@ninetails-monorepo-react-ssr/webpack-config ssr-scripts start",
