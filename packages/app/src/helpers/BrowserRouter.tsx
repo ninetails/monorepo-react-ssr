@@ -1,16 +1,19 @@
 // source: https://github.com/ReactTraining/react-router/issues/6430#issuecomment-434708844
 import React, { createContext, memo, useContext } from 'react'
-import PropTypes from 'prop-types'
 import { BrowserRouter, Route } from 'react-router-dom'
 
 export const RouterContext = createContext({})
 
-function Router ({ children }) {
+type RouterProps = {
+  children: JSX.Element;
+}
+
+function Router({ children }: RouterProps) {
   return (
     <BrowserRouter>
       <Route>
-        {routeProps => (
-          <RouterContext.Provider value={routeProps}>
+        {props => (
+          <RouterContext.Provider value={props}>
             {children}
           </RouterContext.Provider>
         )}
@@ -19,11 +22,7 @@ function Router ({ children }) {
   )
 }
 
-Router.propTypes = {
-  children: PropTypes.node
-}
-
-export function useRouter () {
+export function useRouter() {
   return useContext(RouterContext)
 }
 

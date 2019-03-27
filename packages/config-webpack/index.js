@@ -10,30 +10,39 @@ const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 
 const mode = process.env.NODE_ENV || 'development'
 const isProd = mode === 'production'
-const ifProd = (a, b) => isProd ? a : b
+const ifProd = (a, b) => (isProd ? a : b)
 const isDev = mode === 'development'
-const ifDev = (a, b) => isDev ? a : b
+const ifDev = (a, b) => (isDev ? a : b)
 
 const dist = join(process.cwd(), 'dist')
 
 const devtool = ifDev('inline-module-source-map', 'source-map')
-const clientFilename = ifProd('assets/[name].[contenthash:8].js', 'assets/[name].js')
+const clientFilename = ifProd(
+  'assets/[name].[contenthash:8].js',
+  'assets/[name].js'
+)
 
 const customEnvVars = ['ASSET_PATH']
 
-const babelConfig = JSON.parse(readFileSync(process.env.BABELRC || join(__dirname, '.babelrc'), 'utf8'))
+const babelConfig = JSON.parse(
+  readFileSync(process.env.BABELRC || join(__dirname, '.babelrc'), 'utf8')
+)
 
-const manifest = existsSync(join(process.cwd(), 'manifest.js')) ? require(join(process.cwd(), 'manifest.js')) : undefined
+const manifest = existsSync(join(process.cwd(), 'manifest.js'))
+  ? require(join(process.cwd(), 'manifest.js'))
+  : undefined
 
 module.exports = [
   {
     name: 'client',
     target: 'web',
-    entry:
-      ifDev(['webpack-hot-middleware/client?name=client&reload=true', 'react-hot-loader/patch'], [])
-        .concat([
-          join(process.cwd(), 'src', 'client.js')
-        ]),
+    entry: ifDev(
+      [
+        'webpack-hot-middleware/client?name=client&reload=true',
+        'react-hot-loader/patch'
+      ],
+      []
+    ).concat([join(process.cwd(), 'src', 'client.tsx')]),
     output: {
       path: `${dist}/client`,
       publicPath: process.env.ASSET_PATH || '/',
@@ -47,7 +56,7 @@ module.exports = [
     module: {
       rules: [
         {
-          test: /\.m?js$/,
+          test: /\.m?(j|t)sx?$/,
           include: join(process.cwd(), 'src'),
           use: {
             loader: 'babel-loader',
@@ -57,28 +66,28 @@ module.exports = [
       ]
     },
     resolve: {
+      extensions: ['.wasm', '.tsx', '.ts', '.mjs', '.js', '.json'],
       alias: {
         'react-dom': '@hot-loader/react-dom'
       }
     },
     optimization: {
-      minimizer:
-        ifProd(
-          [
-            new TerserPlugin({
-              cache: false,
-              parallel: true,
-              sourceMap: true,
-              extractComments: 'all',
-              terserOptions: {
-                output: {
-                  comments: false
-                }
+      minimizer: ifProd(
+        [
+          new TerserPlugin({
+            cache: false,
+            parallel: true,
+            sourceMap: true,
+            extractComments: 'all',
+            terserOptions: {
+              output: {
+                comments: false
               }
-            })
-          ],
-          []
-        ),
+            }
+          })
+        ],
+        []
+      ),
       splitChunks: {
         cacheGroups: {
           react: {
@@ -106,7 +115,10 @@ module.exports = [
       }
     },
     plugins: [
-      ifDev(new webpack.HotModuleReplacementPlugin({ multiStep: true }), () => undefined),
+      ifDev(
+        new webpack.HotModuleReplacementPlugin({ multiStep: true }),
+        () => undefined
+      ),
       definePluginFactory(customEnvVars),
       !manifest
         ? () => undefined
@@ -122,17 +134,18 @@ module.exports = [
         swSrc: join(process.cwd(), 'src', 'sw.js'),
         exclude: [/\.map$/]
       }),
-      process.env.WEBPACK_BUNDLE_ANALYZE ? new BundleAnalyzerPlugin() : () => undefined
+      process.env.WEBPACK_BUNDLE_ANALYZE
+        ? new BundleAnalyzerPlugin()
+        : () => undefined
     ]
   },
   {
     name: 'server',
     target: 'node',
-    entry:
-      ifDev(['webpack-hot-middleware/client?name=server', 'react-hot-loader/patch'], [])
-        .concat([
-          join(process.cwd(), 'src', 'express.js')
-        ]),
+    entry: ifDev(
+      ['webpack-hot-middleware/client?name=server', 'react-hot-loader/patch'],
+      []
+    ).concat([join(process.cwd(), 'src', 'express.tsx')]),
     output: {
       path: dist,
       filename: 'server.js',
@@ -146,7 +159,7 @@ module.exports = [
     module: {
       rules: [
         {
-          test: /\.m?js$/,
+          test: /\.m?(j|t)sx?$/,
           include: join(process.cwd(), 'src'),
           use: {
             loader: 'babel-loader',
@@ -156,6 +169,7 @@ module.exports = [
       ]
     },
     resolve: {
+      extensions: ['.wasm', '.tsx', '.ts', '.mjs', '.js', '.json'],
       alias: {
         'react-dom': '@hot-loader/react-dom'
       }

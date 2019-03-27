@@ -1,6 +1,6 @@
 import { renderToString } from 'react-dom/server'
 
-export default async function renderContent (app) {
+export default async function renderContent(app: JSX.Element): Promise<string> {
   try {
     return renderToString(app)
   } catch (err) {

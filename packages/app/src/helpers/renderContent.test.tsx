@@ -1,3 +1,4 @@
+import * as React from 'react'
 import { renderToString } from 'react-dom/server'
 import renderContent from './renderContent'
 
@@ -8,10 +9,10 @@ afterAll(jest.restoreAllMocks)
 
 describe('helpers/renderContent', () => {
   it('should call renderToString passing first argument', async () => {
-    const mockContent = 'mocked content'
+    const mockContent = <p>foo</p>
     const mockReturn = 'foo'
 
-    renderToString.mockReturnValueOnce(mockReturn)
+    ;(renderToString as jest.Mock).mockReturnValueOnce(mockReturn)
 
     const expected = await renderContent(mockContent)
     expect(expected).toBe(mockReturn)
@@ -19,11 +20,13 @@ describe('helpers/renderContent', () => {
   })
 
   it('should call again if renderToString throws a resolving Promise', async () => {
-    const mockContent = 'mocked content'
+    const mockContent = <p>foo</p>
     const mockReturn = 'foo'
 
-    renderToString
-      .mockImplementationOnce(() => throw new Promise(resolve => resolve()))
+    ;(renderToString as jest.Mock)
+      .mockImplementationOnce(() => {
+        throw new Promise(resolve => resolve())
+      })
       .mockImplementationOnce(() => mockReturn)
 
     const expected = await renderContent(mockContent)
@@ -32,12 +35,14 @@ describe('helpers/renderContent', () => {
   })
 
   it('should not call again if renderToString throws a rejecting Promise', () => {
-    const mockContent = 'mocked content'
+    const mockContent = <p>foo</p>
     const mockReturn = 'foo'
     const mockError = new Error('mocked error')
 
-    renderToString
-      .mockImplementationOnce(() => throw new Promise((resolve, reject) => reject(mockError)))
+    ;(renderToString as jest.Mock)
+      .mockImplementationOnce(() => {
+        throw new Promise((resolve, reject) => reject(mockError))
+      })
       .mockImplementationOnce(() => mockReturn)
 
     expect(renderContent(mockContent)).rejects.toThrow(mockError)
@@ -45,12 +50,14 @@ describe('helpers/renderContent', () => {
   })
 
   it('should not call again if renderToString throws an error', () => {
-    const mockContent = 'mocked content'
+    const mockContent = <p>foo</p>
     const mockReturn = 'foo'
     const mockError = new Error('mocked error')
 
-    renderToString
-      .mockImplementationOnce(() => throw mockError)
+    ;(renderToString as jest.Mock)
+      .mockImplementationOnce(() => {
+        throw mockError
+      })
       .mockImplementationOnce(() => mockReturn)
 
     expect(renderContent(mockContent)).rejects.toThrow(mockError)

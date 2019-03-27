@@ -1,4 +1,5 @@
-import React from 'react'
+import * as React from 'react'
+// @ts-ignore
 import { unstable_createRoot } from 'react-dom' // eslint-disable-line camelcase
 import App from './app'
 import BrowserRouter from './helpers/BrowserRouter'
@@ -11,8 +12,10 @@ const app = (
   </BrowserRouter>
 )
 
-function init (root = getRoot(process.env.REACT_APP_ROOT)) {
-  return unstable_createRoot(root, { hydrate: root.hasChildNodes() }).render(app)
+function init(root = getRoot(process.env.REACT_APP_ROOT)) {
+  return unstable_createRoot(root, { hydrate: root.hasChildNodes() }).render(
+    app
+  )
 }
 
 init()

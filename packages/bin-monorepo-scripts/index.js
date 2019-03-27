@@ -18,7 +18,10 @@ const mainDefinitions = [
     defaultOption: true
   }
 ]
-const { _unknown: mainArgv = [], help, command } = commandLineArgs(mainDefinitions, { stopAtFirstUnknown: true })
+const { _unknown: mainArgv = [], help, command } = commandLineArgs(
+  mainDefinitions,
+  { stopAtFirstUnknown: true }
+)
 
 if (help) {
   const sections = [
@@ -32,72 +35,74 @@ if (help) {
     }
   ]
   const usage = commandLineUsage(sections)
+  // eslint-disable-next-line no-console
   console.log(usage)
   process.exit(0)
 }
 
-function run (main, args = []) {
+function run(main, args = []) {
+  const argv = [...args]
   switch (main) {
     case 'lint':
-      const eslintArgv = [...args]
       if (!existsSync(join(process.cwd(), '.eslintrc'))) {
-        eslintArgv.push('-c', join(__dirname, '.eslintrc'))
+        argv.push('-c', join(__dirname, '.eslintrc'))
       }
 
-      return spawn('eslint', eslintArgv, { detached: true, stdio: 'inherit' })
+      return spawn('eslint', argv, { detached: true, stdio: 'inherit' })
+    case 'tsc':
+      return spawn(join(__dirname, 'node_modules', '.bin', 'tsc'), argv, {
+        detached: true,
+        stdio: 'inherit'
+      })
     case 'babel':
-      const babelArgv = [...args]
-
       if (!process.env.NODE_ENV) {
         process.env.NODE_ENV = 'development'
       }
+      // eslint-disable-next-line no-console
       console.log(`NODE_ENV=${process.env.NODE_ENV}`)
-
-      ;['test', 'spec', 'stories'].forEach(partial => babelArgv.push('--ignore', `**/*.${partial}.js`))
+      ;['test', 'spec', 'stories'].forEach(partial =>
+        argv.push('--ignore', `**/*.${partial}.js`)
+      )
 
       if (process.env.BABELRC) {
-        babelArgv.push('--config-file', process.env.BABELRC)
+        argv.push('--config-file', process.env.BABELRC)
       } else if (!existsSync(join(process.cwd(), '.babelrc'))) {
-        babelArgv.push('--config-file', join(__dirname, '.babelrc'))
+        argv.push('--config-file', join(__dirname, '.babelrc'))
       }
 
       switch (process.env.NODE_ENV) {
         case 'development':
-          babelArgv.push('--source-maps', 'inline')
+          argv.push('--source-maps', 'inline')
           break
         case 'production':
-          babelArgv.push('-s')
+          argv.push('-s')
           break
         default:
       }
 
-      return spawn('babel', babelArgv, { detached: true, stdio: 'inherit' })
+      return spawn('babel', argv, { detached: true, stdio: 'inherit' })
     case 'test':
       process.env.BABEL_ENV = 'test'
       process.env.NODE_ENV = 'test'
       process.env.PUBLIC_URL = ''
       require('./loadenv')
 
-      const jestArgv = [...args]
-
       if (process.env.CI) {
-        jestArgv.push('--silent')
+        argv.push('--silent')
       }
 
-      if (
-        !process.env.CI &&
-        jestArgv.indexOf('--coverage') === -1
-      ) {
-        jestArgv.push('--watch')
+      if (!process.env.CI && argv.indexOf('--coverage') === -1) {
+        argv.push('--watch')
       }
 
-      jestArgv.push('-c', join(__dirname, 'jest.config.js'))
-      jestArgv.push('--rootDir', process.cwd())
-      jestArgv.push('--setupFilesAfterEnv', join(__dirname, 'jest.setup.js'))
-      // jestArgv.push('--showConfig')
+      argv.push('-c', join(__dirname, 'jest.config.js'))
+      argv.push('--rootDir', process.cwd())
+      argv.push('--setupFilesAfterEnv', join(__dirname, 'jest.setup.js'))
+      // argv.push('--showConfig')
 
-      return jest.run(jestArgv)
+      return jest.run(argv)
     default:
+      // eslint-disable-next-line no-console
       console.error(`Command not found: ${command}`)
       process.exit(1)
   }

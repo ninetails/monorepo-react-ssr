@@ -4,14 +4,15 @@
   "private": true,
   "license": "MIT",
   "main": "./index.js",
+  "types": "./index.d.ts",
   "devDependencies": {
     "@ninetails-monorepo-react-ssr/monorepo-scripts": "^0.0.0"
   },
-  "scripts": {
-    "lint": "monorepo-scripts lint ."
-  },
   "dependencies": {
     "express-pino-logger": "^4.0.0",
-    "pino": "^5.11.3"
+    "pino": "^5.12.0"
+  },
+  "scripts": {
+    "lint": "monorepo-scripts lint ."
   }
 }

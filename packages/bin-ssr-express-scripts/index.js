@@ -6,7 +6,8 @@ const commandLineUsage = require('command-line-usage')
 const rimraf = require('rimraf')
 const webpack = require('webpack')
 
-const configPath = process.env.WEBPACK_CONFIG || join(process.cwd(), 'webpack.config.js')
+const configPath =
+  process.env.WEBPACK_CONFIG || join(process.cwd(), 'webpack.config.js')
 
 const mainDefinitions = [
   {
@@ -36,7 +37,10 @@ const mainDefinitions = [
     description: 'load .env file (for start command)'
   }
 ]
-const { help, clean, command, dev, verbose } = commandLineArgs(mainDefinitions, { partial: true })
+const { help, clean, command, dev, verbose } = commandLineArgs(
+  mainDefinitions,
+  { partial: true }
+)
 
 if (help) {
   const sections = [
@@ -46,15 +50,17 @@ if (help) {
     },
     {
       header: 'Available commands',
-      content: '{underline analyze}, {underline build}, {underline start}, {underline watch}'
+      content:
+        '{underline analyze}, {underline build}, {underline start}, {underline watch}'
     }
   ]
   const usage = commandLineUsage(sections)
+  // eslint-disable-next-line no-console
   console.log(usage)
   process.exit(0)
 }
 
-function getStats (verbose) {
+function getStats(verbose) {
   if (verbose) {
     return {
       colors: true
@@ -79,11 +85,13 @@ function getStats (verbose) {
   }
 }
 
-function transpile (cb = () => undefined, showAllStats = false) {
+function transpile(cb = () => undefined, showAllStats = false) {
   webpack(require(configPath), (err, stats) => {
     if (err) {
+      // eslint-disable-next-line no-console
       console.error(err.stack || err)
       if (err.details) {
+        // eslint-disable-next-line no-console
         console.error(err.details)
       }
       process.exit(2)
@@ -92,25 +100,31 @@ function transpile (cb = () => undefined, showAllStats = false) {
     const info = stats.toJson()
 
     if (stats.hasErrors()) {
+      // eslint-disable-next-line no-console
       info.errors.forEach(error => console.error(error))
       process.exit(2)
     }
 
     if (stats.hasWarnings()) {
+      // eslint-disable-next-line no-console
       info.warnings.forEach(warn => console.warn(warn))
     }
 
+    // eslint-disable-next-line no-console
     console.log(stats.toString(getStats(showAllStats)))
 
     cb()
   })
 }
 
-function runServer (showAllStats = false) {
-  require('./server')({ config: require(configPath), stats: getStats(showAllStats) })
+function runServer(showAllStats = false) {
+  require('./server')({
+    config: require(configPath),
+    stats: getStats(showAllStats)
+  })
 }
 
-function run ({ clean, dev: loadEnvs, verbose: showAllStats }) {
+function run({ clean, dev: loadEnvs, verbose: showAllStats }) {
   switch (command) {
     case 'watch':
       process.env.NODE_ENV = 'development'
@@ -126,7 +140,9 @@ function run ({ clean, dev: loadEnvs, verbose: showAllStats }) {
       }
 
       if (clean) {
-        rimraf(join(process.cwd(), 'dist'), () => transpile(() => runServer(showAllStats), showAllStats))
+        rimraf(join(process.cwd(), 'dist'), () =>
+          transpile(() => runServer(showAllStats), showAllStats)
+        )
       } else if (!existsSync(join(process.cwd(), 'dist', 'server.js'))) {
         transpile(() => runServer(showAllStats), showAllStats)
       } else {
@@ -143,6 +159,7 @@ function run ({ clean, dev: loadEnvs, verbose: showAllStats }) {
 
       break
     default:
+      // eslint-disable-next-line no-console
       console.error(`Command not found: ${command}`)
       process.exit(1)
   }

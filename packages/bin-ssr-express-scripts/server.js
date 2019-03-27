@@ -25,7 +25,7 @@ const promisifiedCreateServer = (server, port, createServer) => opts => {
   })
 }
 
-module.exports = function run ({ app = express(), config, stats }) {
+module.exports = function run({ app = express(), config, stats }) {
   if (!process.env.APP_SKIP_REQUEST_LOG) {
     app.use(loggerMiddleware({ logger }))
   }
@@ -50,7 +50,9 @@ module.exports = function run ({ app = express(), config, stats }) {
       webpackHotMiddleware(
         compiler.compilers.find(compiler => compiler.name === 'client'),
         {
-          log: process.env.APP_SKIP_WEBPACK_LOG ? noop : logger.info.bind(logger)
+          log: process.env.APP_SKIP_WEBPACK_LOG
+            ? noop
+            : logger.info.bind(logger)
         }
       )
     )
@@ -69,7 +71,10 @@ module.exports = function run ({ app = express(), config, stats }) {
   return Promise.resolve({ key: process.env.KEY, cert: process.env.CERT })
     .then(({ key, cert }) => {
       if (key && cert) {
-        return { key: join(process.cwd(), key), cert: join(process.cwd(), cert) }
+        return {
+          key: join(process.cwd(), key),
+          cert: join(process.cwd(), cert)
+        }
       }
 
       return keygen({
@@ -81,14 +86,27 @@ module.exports = function run ({ app = express(), config, stats }) {
       key: readFileSync(key),
       cert: readFileSync(cert)
     }))
-    .then(promisifiedCreateServer(app, APP_PORT, process.env.APP_USE_HTTPS ? createServerHttps : createServerHttp))
-    .then(() => logger.info({
-      APP_USE_HTTPS: process.env.APP_USE_HTTPS,
-      APP_SKIP_WEBPACK_LOG: process.env.APP_SKIP_WEBPACK_LOG,
-      APP_SKIP_REQUEST_LOG: process.env.APP_SKIP_REQUEST_LOG
-    }, `Server started: ${process.env.APP_USE_HTTPS ? 'https' : 'http'}://localhost:${APP_PORT}/`))
+    .then(
+      promisifiedCreateServer(
+        app,
+        APP_PORT,
+        process.env.APP_USE_HTTPS ? createServerHttps : createServerHttp
+      )
+    )
+    .then(() =>
+      logger.info(
+        {
+          APP_USE_HTTPS: process.env.APP_USE_HTTPS,
+          APP_SKIP_WEBPACK_LOG: process.env.APP_SKIP_WEBPACK_LOG,
+          APP_SKIP_REQUEST_LOG: process.env.APP_SKIP_REQUEST_LOG
+        },
+        `Server started: ${
+          process.env.APP_USE_HTTPS ? 'https' : 'http'
+        }://localhost:${APP_PORT}/`
+      )
+    )
     .catch(error => {
-      console.error(error)
+      logger.error(error)
       return process.exit(1)
     })
 }

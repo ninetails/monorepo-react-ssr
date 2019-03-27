@@ -1,6 +1,6 @@
 export default function getRoot (
   id = 'root',
-  { tag = 'div', document = global.document } = {}
+  { tag = 'div', document = (global as any).document } = {}
 ) {
   let root = document.getElementById(id)
 
