@@ -2,7 +2,7 @@
 
 ## Repo coding standards
 
-It uses [JavaScript Standard Style](https://standardjs.com/) with [eslint](https://eslint.org/) and some hooks to ensure code quality, including running tests using [Jest](https://jestjs.io/). This repo aims for `react@^16.7.0` (currently on `react@^16.7.0-alpha.2`) with frontend code written in ES6 transpiled with [Babel](https://babeljs.io/).
+It uses [JavaScript Standard Style](https://standardjs.com/) with [eslint](https://eslint.org/) and some hooks to ensure code quality, including running tests using [Jest](https://jestjs.io/). This repo aims for `react@16.8+` with frontend code written in [Typescript](https://www.typescriptlang.org/) transpiled with [Babel](https://babeljs.io/) and Lint already configurated.
 
 For Node.js version, it is set to `lts/*` (currently on `lts/dubnium`) managed with [nvm](https://github.com/creationix/nvm).
 
@@ -34,3 +34,15 @@ For corresponding folder and package name, please run **npx lerna ls -al**.
   Finds on every changed package since `develop` for a script named `lint` and runs it in parallel. Bail on first error found.
 - **pre-push**: runs test
   Finds on every changed package since `develop` for a script named `test` and runs it in parallel. Bail on first error found.
+
+## NPM Scripts for root
+
+- **co**: runs comittizen
+  That will run `npx git-cz`, that will download and execute a helper for writting commit messages
+- **lint**: runs `lint` script on every package that has it.
+- **reset**: make a clean install on repository
+- **test**: runs `test` script on every package that has it
+
+## Speeding up Yarn installs
+
+As optional you can copy `.yarnrc.example` file as `.yarnrc`. It was configurated to cache Tarball dependencies from yarn, allowing non-first installations to use local downloaded packages.

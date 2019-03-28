@@ -9,13 +9,13 @@
     ]
   },
   "devDependencies": {
-    "@commitlint/cli": "^7.3.2",
-    "@commitlint/config-conventional": "^7.3.1",
-    "@commitlint/config-lerna-scopes": "^7.3.1",
+    "@commitlint/cli": "^7.5.2",
+    "@commitlint/config-conventional": "^7.5.0",
+    "@commitlint/config-lerna-scopes": "^7.5.1",
     "cross-env": "^5.2.0",
     "cz-conventional-changelog": "^2.1.0",
     "husky": "^1.3.1",
-    "lerna": "^3.10.6"
+    "lerna": "^3.13.1"
   },
   "husky": {
     "hooks": {
@@ -30,16 +30,16 @@
     }
   },
   "scripts": {
-    "bootstrap": "lerna bootstrap",
     "clean": "lerna clean --yes 2>/dev/null || :",
     "co": "npx git-cz",
-    "hook:lint": "$npm_execpath run lint -- --since develop --parallel",
+    "hook:lint": "$npm_execpath run lerna:lint -- --since develop --parallel",
     "hook:test": "$npm_execpath run test -- --since develop --parallel",
     "lerna:clean": "lerna run clean 2>/dev/null || :",
-    "lint": "lerna run lint",
+    "lerna:lint": "lerna run lint",
+    "lerna:test": "cross-env CI=true lerna run test",
+    "lint": "$npm_execpath run lerna:lint -- --no-bail --stream",
     "purge": "$npm_execpath run lerna:clean && $npm_execpath run clean && rm -rf node_modules",
-    "reset": "$npm_execpath run purge && $npm_execpath install && $npm_execpath run bootstrap",
-    "test": "cross-env CI=true lerna run test"
-  },
-  "dependencies": {}
+    "reset": "$npm_execpath run purge && $npm_execpath install",
+    "test": "$npm_execpath run lerna:test -- --no-bail --stream"
+  }
 }

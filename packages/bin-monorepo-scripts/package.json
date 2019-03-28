@@ -24,8 +24,8 @@
     "jest-environment-jsdom": "^24.5.0",
     "jest-haste-map": "^24.5.0",
     "jest-resolve": "^24.5.0",
-    "jest-silent-reporter": "^0.1.1",
-    "react-dom": "^16.8.5",
+    "jest-silent-reporter": "^0.1.2",
+    "react-dom": "^16.8.6",
     "react-testing-library": "^6.0.3",
     "typescript": "^3.3.4000"
   },

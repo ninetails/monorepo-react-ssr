@@ -19,7 +19,7 @@
     "rimraf": "^2.6.3",
     "spdy": "^4.0.0",
     "tls-keygen": "^3.7.0",
-    "webpack": "^4.29.0",
+    "webpack": "^4.29.6",
     "webpack-cli": "^3.3.0",
     "webpack-dev-middleware": "^3.6.1",
     "webpack-hot-middleware": "^2.24.3",
